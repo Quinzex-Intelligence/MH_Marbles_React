@@ -1,7 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
-import { FloorVisualizer } from '@/components/FloorVisualizer';
 import { ProductCollection } from '@/components/ProductCollection';
 import { WhyUs } from '@/components/WhyUs';
 import { Reviews } from '@/components/Reviews';
@@ -58,23 +57,23 @@ const Index = () => {
   return (
     <>
       <Helmet>
-        <title>MH Marble Hyderabad | Premium Tiles & Marble Showroom | 3D Floor Visualizer</title>
-        <meta name="description" content="Telangana's premier marble, granite & tiles showroom. Visualize your dream flooring with our interactive 3D room visualizer. 500+ varieties, same-day delivery. Visit our Hyderabad showroom!" />
-        <meta name="keywords" content="tiles showroom Hyderabad, marble store Telangana, floor tiles shop near me, premium marble Hyderabad, Italian marble Hyderabad, granite tiles, vitrified tiles, wooden flooring" />
-        
+        <title>MH MARBLES | Visionary Architectural Gallery & Signature Stone Curation</title>
+        <meta name="description" content="Curators of the earth's most exquisite architectural statements. Discover our signature collection of Italian marble and exotic stones, crafted for the discerning visionary since 1980." />
+        <meta name="keywords" content="luxury marble gallery, premium architectural stone, Italian marble curation, exotic granite, signature surfaces, high-end stone workshop" />
+
         {/* Open Graph */}
-        <meta property="og:title" content="MH Marble Hyderabad | Premium Tiles & Marble Showroom" />
-        <meta property="og:description" content="Visualize your dream flooring with our 3D room visualizer. 500+ varieties of marble, granite & tiles." />
+        <meta property="og:title" content="MH MARBLES | Visionary Architectural Gallery" />
+        <meta property="og:description" content="Curating the earth's most exquisite architectural statements for the discerning visionary." />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en_IN" />
-        
+
         {/* Mobile */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <meta name="theme-color" content="#d4af37" />
-        
+        <meta name="theme-color" content="#0A0A0A" />
+
         {/* Canonical */}
         <link rel="canonical" href="https://mhmarble.com" />
-        
+
         {/* Structured Data */}
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
@@ -85,7 +84,6 @@ const Index = () => {
         <Header />
         <main>
           <Hero />
-          <FloorVisualizer />
           <ProductCollection />
           <WhyUs />
           <Reviews />

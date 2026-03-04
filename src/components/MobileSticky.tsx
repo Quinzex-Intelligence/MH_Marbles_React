@@ -6,18 +6,18 @@ export function MobileSticky() {
       <div className="flex gap-3">
         <a
           href="tel:+919876543210"
-          className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl font-medium shadow-soft"
+          className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-none font-bold uppercase text-[10px] tracking-[0.2em] transition-transform active:scale-95"
         >
-          <Phone className="w-5 h-5" />
+          <Phone className="w-4 h-4" />
           Call Now
         </a>
         <a
           href="https://www.google.com/maps/dir/?api=1&destination=17.4947,78.4177"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 flex items-center justify-center gap-2 bg-accent text-accent-foreground py-3 rounded-xl font-medium shadow-gold"
+          className="flex-1 flex items-center justify-center gap-2 bg-accent text-white py-3 rounded-none font-bold uppercase text-[10px] tracking-[0.2em] shadow-gold transition-transform active:scale-95"
         >
-          <Navigation className="w-5 h-5" />
+          <Navigation className="w-4 h-4" />
           Directions
         </a>
       </div>

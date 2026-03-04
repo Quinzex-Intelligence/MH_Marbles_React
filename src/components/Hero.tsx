@@ -1,114 +1,105 @@
 import { motion } from 'framer-motion';
-import { ArrowDown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Background Parallax
+      gsap.to(bgRef.current, {
+        y: '20%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
+
+      // Text Entrance
+      gsap.from('.hero-reveal', {
+        y: 60,
+        opacity: 0,
+        duration: 1.5,
+        stagger: 0.2,
+        ease: 'power4.out',
+        delay: 0.5
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden marble-texture">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-luxury" />
-      
-      {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-      
-      {/* Content */}
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 bg-secondary/80 backdrop-blur-sm border border-border px-4 py-2 rounded-full mb-8"
-          >
-            <Sparkles className="w-4 h-4 text-accent" />
-            <span className="text-sm font-medium text-foreground/80">
-              Telangana's Premier Marble & Tiles Showroom
-            </span>
-          </motion.div>
+    <section ref={containerRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+      {/* Cinematic Background Image */}
+      <div ref={bgRef} className="absolute inset-0 z-0 h-[120%] -top-[10%]">
+        <img
+          src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=2000"
+          alt="Luxury Architectural Interior"
+          className="w-full h-full object-cover opacity-60 grayscale-[20%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+      </div>
 
-          {/* Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight mb-6"
-          >
-            Visualize Your
-            <span className="block text-gradient-gold">Dream Flooring</span>
-            Before You Buy
-          </motion.h1>
+      <div className="container mx-auto px-12 relative z-10">
+        <div className="max-w-5xl">
+          <div ref={textRef}>
+            <div className="hero-reveal flex items-center gap-4 mb-8">
+              <div className="w-16 h-[1px] bg-accent" />
+              <span className="text-[11px] font-bold tracking-[0.6em] uppercase text-accent">
+                ESTABLISHED EXCELLENCE
+              </span>
+            </div>
 
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
-          >
-            Experience luxury marble, granite, and premium tiles in our interactive 3D room visualizer. 
-            See exactly how each floor will transform your space.
-          </motion.p>
+            <h1 className="hero-reveal text-5xl md:text-9xl font-light leading-[0.85] text-white mb-10 tracking-tight italic text-shadow-xl">
+              Timeless <br />
+              <span className="not-italic font-medium text-white shadow-sm">Masterpieces.</span>
+            </h1>
 
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
-          >
-            <Button variant="hero" size="xl" asChild>
-              <a href="#visualizer">
-                <Sparkles className="w-5 h-5 mr-2" />
-                Try Floor Visualizer
-              </a>
-            </Button>
-            <Button variant="hero-outline" size="xl" asChild>
-              <a href="#collection">View Collection</a>
-            </Button>
-          </motion.div>
+            <p className="hero-reveal text-xl md:text-2xl text-white/90 max-w-2xl mb-16 font-light leading-relaxed tracking-wide italic">
+              A curated sanctuary of the world&apos;s most exquisite stones,
+              crafted for the architectural visionary.
+            </p>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto"
-          >
-            {[
-              { value: '500+', label: 'Tile Varieties' },
-              { value: '15+', label: 'Years Experience' },
-              { value: '10K+', label: 'Happy Customers' },
-              { value: '4.9★', label: 'Google Rating' },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="font-serif text-3xl md:text-4xl font-semibold text-gradient-gold">
-                  {stat.value}
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
+            <div className="hero-reveal flex flex-wrap gap-8 md:gap-12 items-center">
+              <Button
+                size="xl"
+                className="bg-accent hover:bg-white hover:text-black text-white font-bold tracking-[0.2em] md:tracking-[0.4em] uppercase rounded-none h-16 md:h-20 px-8 md:px-14 transition-all duration-700 shadow-2xl relative z-20 w-full md:w-auto"
+                asChild
+              >
+                <a href="/curation">
+                  DISCOVER THE COLLECTION
+                </a>
+              </Button>
+
+              <div className="hidden md:flex flex-col border-l border-white/20 pl-8 space-y-2 relative z-20">
+                <span className="text-[10px] font-bold text-accent uppercase tracking-[0.3em]">Curation 01</span>
+                <span className="text-sm font-light text-white/80 uppercase tracking-widest italic">Italian Marble Series</span>
               </div>
-            ))}
-          </motion.div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Fixed Scroll Indicator - Bottom Right */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        transition={{ delay: 2, duration: 1 }}
+        className="absolute bottom-12 right-12 hidden md:flex flex-col items-center gap-4 z-10"
       >
-        <motion.a
-          href="#visualizer"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <span className="text-sm font-medium">Scroll to Explore</span>
-          <ArrowDown className="w-5 h-5" />
-        </motion.a>
+        <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-white/40 rotate-90 mb-8 mt-4">SCROLL</span>
+        <div className="w-[1px] h-24 bg-gradient-to-b from-accent to-transparent" />
       </motion.div>
     </section>
   );

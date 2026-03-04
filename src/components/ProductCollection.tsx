@@ -1,225 +1,140 @@
-import { useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { tiles, categories, colors, usages, Tile } from '@/data/tiles';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { tiles, Tile } from '@/data/tiles';
 import { cn } from '@/lib/utils';
-import { Filter, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { SlabImage } from './SlabImage';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function ProductCollection() {
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [activeColor, setActiveColor] = useState<string | null>(null);
-  const [activeUsage, setActiveUsage] = useState<string | null>(null);
-
-  const filteredTiles = tiles.filter((tile) => {
-    if (activeCategory && tile.category !== activeCategory) return false;
-    if (activeColor && tile.color !== activeColor) return false;
-    if (activeUsage && !tile.usage.includes(activeUsage)) return false;
-    return true;
-  });
-
-  const clearFilters = () => {
-    setActiveCategory(null);
-    setActiveColor(null);
-    setActiveUsage(null);
-  };
+  const sectionRef = useRef<HTMLElement>(null);
 
   return (
-    <section id="collection" className="py-24 bg-background">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
-          <span className="text-accent font-medium tracking-wider uppercase text-sm">
-            Our Collection
-          </span>
-          <h2 className="font-serif text-4xl md:text-5xl font-semibold mt-3 mb-4">
-            Premium Flooring Selection
-          </h2>
-          <p className="text-muted-foreground text-lg">
-            Explore our curated collection of world-class marble, granite, vitrified tiles, 
-            and wooden finishes. Each piece handpicked for exceptional quality.
-          </p>
-        </motion.div>
-
-        {/* Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12 space-y-6"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-foreground">
-              <Filter className="w-5 h-5" />
-              <span className="font-medium">Filter By</span>
-            </div>
-            {(activeCategory || activeColor || activeUsage) && (
-              <button
-                onClick={clearFilters}
-                className="text-sm text-accent hover:underline"
-              >
-                Clear All
-              </button>
-            )}
-          </div>
-
-          <div className="flex flex-wrap gap-4">
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-all border",
-                    activeCategory === cat.id
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-background border-border hover:border-accent"
-                  )}
-                >
-                  {cat.icon} {cat.name}
-                </button>
-              ))}
-            </div>
-
-            {/* Color Filter */}
-            <div className="flex flex-wrap gap-2">
-              {colors.map((color) => (
-                <button
-                  key={color}
-                  onClick={() => setActiveColor(activeColor === color ? null : color)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-all border",
-                    activeColor === color
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-background border-border hover:border-accent"
-                  )}
-                >
-                  {color}
-                </button>
-              ))}
-            </div>
-
-            {/* Usage Filter */}
-            <div className="flex flex-wrap gap-2">
-              {usages.map((usage) => (
-                <button
-                  key={usage}
-                  onClick={() => setActiveUsage(activeUsage === usage ? null : usage)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-all border",
-                    activeUsage === usage
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-background border-border hover:border-accent"
-                  )}
-                >
-                  {usage}
-                </button>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredTiles.map((tile, index) => (
-            <ProductCard key={tile.id} tile={tile} index={index} />
+    <section ref={sectionRef} id="collection" className="py-64 bg-background overflow-hidden relative">
+      {/* Background Grid Pattern to fill space */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <div className="grid grid-cols-12 h-full">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="border-r border-foreground h-full" />
           ))}
         </div>
+      </div>
 
-        {filteredTiles.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No tiles match your filters.</p>
-            <button
-              onClick={clearFilters}
-              className="text-accent hover:underline mt-2"
-            >
-              Clear filters
-            </button>
-          </div>
-        )}
-
-        {/* View All CTA */}
+      <div className="container mx-auto px-8 md:px-12 mb-48">
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mt-12"
+          transition={{ duration: 1 }}
+          className="max-w-4xl"
         >
-          <Button variant="hero-outline" size="xl">
-            View Full Catalog
-            <ChevronRight className="w-5 h-5 ml-2" />
-          </Button>
+          <span className="text-[10px] font-bold tracking-[0.8em] uppercase text-accent mb-8 block font-inter">THE EXHIBITION</span>
+          <h2 className="text-7xl md:text-9xl font-light text-foreground leading-[0.85] tracking-tight italic mb-12">
+            Sculptural <br />
+            <span className="not-italic font-medium">Statements.</span>
+          </h2>
+          <p className="text-xl md:text-2xl text-foreground/40 max-w-2xl font-light italic leading-loose">
+            An immersive walk through the earth’s most exquisite formations.
+            Each slab is a singular masterpiece, curated for the visionary architect.
+          </p>
         </motion.div>
+      </div>
+
+      <div className="space-y-48 md:space-y-64">
+        {tiles.slice(0, 6).map((tile, index) => (
+          <ShowcaseItem key={tile.id} tile={tile} index={index} />
+        ))}
       </div>
     </section>
   );
 }
 
-interface ProductCardProps {
-  tile: Tile;
-  index: number;
-}
+function ShowcaseItem({ tile, index }: { tile: Tile; index: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const isEven = index % 2 === 0;
 
-function ProductCard({ tile, index }: ProductCardProps) {
-  const categoryInfo = categories.find((c) => c.id === tile.category);
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Image Group Reveal
+      gsap.from(imageRef.current, {
+        x: isEven ? -100 : 100,
+        opacity: 0,
+        duration: 2,
+        ease: 'power4.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 85%',
+        }
+      });
+
+      // Text Interaction
+      gsap.from(textRef.current, {
+        y: 50,
+        opacity: 0,
+        duration: 1.5,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 65%',
+        }
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [isEven]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.05 }}
-      className="group bg-card rounded-xl border border-border overflow-hidden hover:shadow-luxury transition-all duration-500"
-    >
-      {/* Image/Color Swatch */}
-      <div
-        className="h-48 relative overflow-hidden"
-        style={{ backgroundColor: tile.textureColor }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        
-        {/* Category Badge */}
-        <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium">
-          {categoryInfo?.icon} {categoryInfo?.name}
+    <div ref={containerRef} className={cn(
+      "relative container mx-auto px-8 md:px-12 flex flex-col md:flex-row items-center gap-16 md:gap-32",
+      !isEven && "md:flex-row-reverse text-right"
+    )}>
+      {/* Immersive Slab Showcase */}
+      <div className="flex-1 w-full relative group min-h-[500px]">
+        <div ref={imageRef} className="w-full h-full relative z-10">
+          <SlabImage image={tile.image} color={tile.textureColor} name={tile.name} />
+
+          <div className={cn(
+            "absolute top-0 z-20 pointer-events-none p-8 md:p-12",
+            isEven ? "left-0" : "right-0"
+          )}>
+            <span className="text-[10px] font-bold text-foreground/30 tracking-[0.5em] uppercase block mb-3 font-inter">Curation Ref. 0{index + 1}</span>
+            <span className="text-4xl md:text-6xl font-light text-foreground italic tracking-tighter uppercase drop-shadow-sm">{tile.name}</span>
+          </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-5">
-        <h3 className="font-serif text-lg font-semibold group-hover:text-accent transition-colors">
-          {tile.name}
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          {tile.finish} • {tile.color}
+      {/* Narrative Context */}
+      <div ref={textRef} className="flex-1 max-w-lg space-y-12 pt-12 md:pt-0">
+        <div className="space-y-6">
+          <span className="text-[11px] font-bold text-accent uppercase tracking-[0.6em]">The Evolution of Space</span>
+          <h3 className="text-6xl md:text-7xl font-light text-foreground italic leading-none">{tile.color} <br /> <span className="not-italic font-medium">Composition.</span></h3>
+        </div>
+
+        <p className="text-xl text-foreground/60 leading-relaxed font-light italic">
+          Each slab of {tile.name} is a billion-year narrative written in mineral.
+          Sourced from the heart of the most ancient quarries, it represents the
+          pinnacle of natural crystallization. Its {tile.finish} surface
+          captures light in ways no manufactured material can replicate.
         </p>
-        
-        <div className="flex flex-wrap gap-1 mt-3">
-          {tile.usage.map((use) => (
-            <span
-              key={use}
-              className="text-xs bg-secondary px-2 py-0.5 rounded-full"
-            >
-              {use}
-            </span>
-          ))}
-        </div>
 
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
-          {tile.price && (
-            <span className="text-lg font-semibold text-accent">{tile.price}</span>
-          )}
-          <Button variant="ghost" size="sm" className="ml-auto group-hover:text-accent">
-            View Details
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </Button>
+        <div className={cn("flex items-center gap-10", !isEven && "justify-end")}>
+          <div className="w-24 h-[1px] bg-accent" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-foreground/30">Limited Exhibition 0{index + 1}</span>
         </div>
       </div>
-    </motion.div>
+
+      {/* Dynamic Background Element */}
+      <span className={cn(
+        "absolute -z-10 text-[35vw] font-black text-foreground/[0.015] leading-none pointer-events-none select-none italic",
+        isEven ? "-right-24 top-1/4" : "-left-24 bottom-1/4"
+      )}>
+        {tile.name.charAt(0)}
+      </span>
+    </div>
   );
 }
 

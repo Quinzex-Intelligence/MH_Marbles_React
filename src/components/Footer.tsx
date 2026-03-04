@@ -1,145 +1,93 @@
-import { Phone, Mail, MapPin, Facebook, Instagram, Youtube } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const footerLinks = {
-  products: [
-    { label: 'Marble', href: '#collection' },
-    { label: 'Granite', href: '#collection' },
-    { label: 'Vitrified Tiles', href: '#collection' },
-    { label: 'Wooden Finish', href: '#collection' },
+  curation: [
+    { label: 'Italian Marble', href: '/curation' },
+    { label: 'Exotic Granite', href: '/curation' },
+    { label: 'Antique Texture', href: '/curation' },
+    { label: 'Signature Series', href: '/curation' },
   ],
-  company: [
-    { label: 'About Us', href: '#why-us' },
-    { label: 'Our Showroom', href: '#contact' },
-    { label: 'Reviews', href: '#reviews' },
-    { label: 'Contact', href: '#contact' },
-  ],
-  services: [
-    { label: 'Floor Visualizer', href: '#visualizer' },
-    { label: 'Expert Consultation', href: '#contact' },
-    { label: 'Same-Day Delivery', href: '#why-us' },
-    { label: 'Installation Support', href: '#contact' },
+  legacy: [
+    { label: 'Our Story', href: '/legacy' },
+    { label: 'The Journal', href: '/journal' },
+    { label: 'Private Gallery', href: '/concierge' },
+    { label: 'Concierge', href: '/concierge' },
   ],
 };
 
 export function Footer() {
   return (
-    <footer className="bg-primary text-primary-foreground">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
-          {/* Brand */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-gold rounded-lg flex items-center justify-center shadow-gold">
-                <span className="font-serif font-bold text-primary text-xl">M</span>
-              </div>
-              <div>
-                <h3 className="font-serif text-2xl font-semibold">MH MARBLE</h3>
-                <p className="text-primary-foreground/60 text-sm">Hyderabad</p>
-              </div>
+    <footer className="bg-[#0A0A0A] text-white border-t border-white/5 py-32 px-8 md:px-12">
+      <div className="container mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-24">
+          {/* Brand Signature */}
+          <div className="lg:col-span-2 space-y-12">
+            <div className="flex flex-col">
+              <span className="text-3xl font-light tracking-[0.5em] text-white uppercase leading-tight">MH MARBLES</span>
+              <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-accent ml-2">VISIONARY GALLERY</span>
             </div>
-            <p className="text-primary-foreground/70 leading-relaxed mb-6 max-w-sm">
-              Telangana's premier destination for premium marble, granite, and tiles. 
-              Transforming spaces with exceptional quality since 2009.
+
+            <p className="text-xl font-light text-white/40 leading-relaxed italic max-w-sm">
+              Curating the earth&apos;s most exquisite architectural statements
+              for the discerning visionary since 1980.
             </p>
-            
-            {/* Contact Info */}
-            <div className="space-y-3">
-              <a href="tel:+919876543210" className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors">
-                <Phone className="w-5 h-5" />
+
+            <div className="space-y-6 pt-4">
+              <a href="tel:+919876543210" className="text-sm font-bold tracking-[0.4em] text-white hover:text-accent transition-colors block uppercase">
                 +91 98765 43210
               </a>
-              <a href="mailto:info@mhmarble.com" className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors">
-                <Mail className="w-5 h-5" />
-                info@mhmarble.com
+              <a href="mailto:curator@mhmarble.com" className="text-sm font-bold tracking-[0.4em] text-white hover:text-accent transition-colors block uppercase">
+                CURATOR@MHMARBLE.COM
               </a>
-              <div className="flex items-start gap-3 text-primary-foreground/80">
-                <MapPin className="w-5 h-5 mt-0.5" />
-                <span>Kukatpally, Hyderabad, Telangana</span>
-              </div>
             </div>
           </div>
 
-          {/* Products */}
-          <div>
-            <h4 className="font-serif text-lg font-semibold mb-4">Products</h4>
-            <ul className="space-y-3">
-              {footerLinks.products.map((link) => (
+          {/* Nav groups */}
+          <div className="space-y-10">
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">The Curation</h4>
+            <ul className="space-y-6">
+              {footerLinks.curation.map((link) => (
                 <li key={link.label}>
-                  <a 
-                    href={link.href}
-                    className="text-primary-foreground/70 hover:text-accent transition-colors"
-                  >
+                  <Link to={link.href} className="text-sm font-light text-white/50 hover:text-white transition-colors italic tracking-widest">
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Company */}
-          <div>
-            <h4 className="font-serif text-lg font-semibold mb-4">Company</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
+          <div className="space-y-10">
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">The Legacy</h4>
+            <ul className="space-y-6">
+              {footerLinks.legacy.map((link) => (
                 <li key={link.label}>
-                  <a 
-                    href={link.href}
-                    className="text-primary-foreground/70 hover:text-accent transition-colors"
-                  >
+                  <Link to={link.href} className="text-sm font-light text-white/50 hover:text-white transition-colors italic tracking-widest">
                     {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="font-serif text-lg font-semibold mb-4">Services</h4>
-            <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
-                <li key={link.label}>
-                  <a 
-                    href={link.href}
-                    className="text-primary-foreground/70 hover:text-accent transition-colors"
-                  >
-                    {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-primary-foreground/50 text-sm">
-            © {new Date().getFullYear()} MH Marble. All rights reserved.
+        {/* Bottom Signature */}
+        <div className="mt-32 pt-16 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="flex items-center gap-12 opacity-20 grayscale">
+            <span className="text-[10px] font-bold tracking-[0.4em] uppercase">Milan</span>
+            <span className="text-[10px] font-bold tracking-[0.4em] uppercase">Madrid</span>
+            <span className="text-[10px] font-bold tracking-[0.4em] uppercase">Hyderabad</span>
+          </div>
+
+          <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.6em]">
+            © {new Date().getFullYear()} MH MARBLES. CRAFTED FOR ETERNITY.
           </p>
-          
-          {/* Social Links */}
-          <div className="flex items-center gap-4">
-            <a 
-              href="#" 
-              className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-accent hover:text-primary transition-colors"
-              aria-label="Facebook"
-            >
-              <Facebook className="w-5 h-5" />
-            </a>
-            <a 
-              href="#" 
-              className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-accent hover:text-primary transition-colors"
-              aria-label="Instagram"
-            >
-              <Instagram className="w-5 h-5" />
-            </a>
-            <a 
-              href="#" 
-              className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-accent hover:text-primary transition-colors"
-              aria-label="YouTube"
-            >
-              <Youtube className="w-5 h-5" />
-            </a>
+
+          <div className="flex gap-10 opacity-30">
+            {['Facebook', 'Instagram', 'Pinterest'].map(social => (
+              <a key={social} href="#" className="text-[10px] font-bold tracking-[0.3em] uppercase hover:text-accent transition-colors">
+                {social}
+              </a>
+            ))}
           </div>
         </div>
       </div>

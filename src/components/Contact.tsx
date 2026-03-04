@@ -3,7 +3,7 @@ import { MapPin, Phone, Clock, Navigation, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const storeInfo = {
-  name: 'MH Marble Showroom',
+  name: 'MH Marbles Showroom',
   address: '123 Tile Street, Kukatpally Housing Board Colony, Kukatpally, Hyderabad, Telangana 500072',
   phone: '+91 98765 43210',
   email: 'info@mhmarble.com',
@@ -17,134 +17,87 @@ const storeInfo = {
 
 export function Contact() {
   return (
-    <section id="contact" className="py-24 bg-background">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
-          <span className="text-accent font-medium tracking-wider uppercase text-sm">
-            Visit Us
-          </span>
-          <h2 className="font-serif text-4xl md:text-5xl font-semibold mt-3 mb-4">
-            Our Showroom
-          </h2>
-          <p className="text-muted-foreground text-lg">
-            Experience our extensive collection in person. Our expert team is ready to help you 
-            find the perfect flooring solution.
-          </p>
-        </motion.div>
+    <section id="contact" className="py-48 bg-background transition-colors duration-700 overflow-hidden">
+      <div className="container mx-auto px-8 md:px-12">
+        <div className="flex flex-col lg:flex-row gap-32 items-start">
+          {/* Concierge Details */}
+          <div className="lg:w-1/2">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+            >
+              <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-accent mb-8 block">Inquiries</span>
+              <h2 className="text-6xl md:text-8xl font-light text-foreground leading-tight tracking-tight italic mb-16">
+                Personal <br />
+                <span className="not-italic font-medium">Concierge.</span>
+              </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Map */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="rounded-2xl overflow-hidden shadow-luxury border border-border h-[400px] lg:h-full min-h-[400px]"
-          >
+              <div className="space-y-16">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent mb-4">The Gallery</p>
+                  <p className="text-2xl font-light text-foreground/80 leading-relaxed italic">
+                    123 Tile Street, Kukatpally Housing Board Colony, <br />
+                    Kukatpally, Hyderabad, Telangana 500072
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent mb-4">Direct Line</p>
+                    <a href="tel:+919876543210" className="text-2xl font-light text-foreground/80 hover:text-accent transition-colors italic">
+                      +91 98765 43210
+                    </a>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent mb-4">Electronic Mail</p>
+                    <a href="mailto:curator@mhmarble.com" className="text-2xl font-light text-foreground/80 hover:text-accent transition-colors italic">
+                      curator@mhmarble.com
+                    </a>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent mb-4">Gallery Hours</p>
+                  <div className="space-y-2">
+                    <p className="text-lg font-light text-foreground/60 italic flex justify-between max-w-sm">
+                      <span>Monday — Saturday</span>
+                      <span>9:00 — 20:00</span>
+                    </p>
+                    <p className="text-lg font-light text-foreground/60 italic flex justify-between max-w-sm">
+                      <span>Sunday</span>
+                      <span>10:00 — 18:00</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-20">
+                <Button
+                  variant="outline"
+                  className="border-accent text-accent hover:bg-accent hover:text-white rounded-none h-16 px-12 text-[11px] font-bold tracking-[0.4em] uppercase transition-all duration-700"
+                  asChild
+                >
+                  <a href={storeInfo.directionsUrl}>GET DIRECTIONS</a>
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Minimalist Visual / Map Placeholder */}
+          <div className="flex-1 w-full aspect-square bg-black grayscale-[40%] hover:grayscale-0 transition-all duration-1000 overflow-hidden relative group">
             <iframe
               src={storeInfo.mapUrl}
               width="100%"
               height="100%"
-              style={{ border: 0 }}
+              style={{ border: 0, filter: 'contrast(1.2) grayscale(1)' }}
               allowFullScreen
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="MH Marble Location"
+              title="MH Marbles Location"
             />
-          </motion.div>
-
-          {/* Store Details */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            {/* Address */}
-            <div className="flex gap-4">
-              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center shrink-0">
-                <MapPin className="w-6 h-6 text-accent" />
-              </div>
-              <div>
-                <h3 className="font-serif text-xl font-semibold mb-2">Address</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {storeInfo.address}
-                </p>
-              </div>
-            </div>
-
-            {/* Phone */}
-            <div className="flex gap-4">
-              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center shrink-0">
-                <Phone className="w-6 h-6 text-accent" />
-              </div>
-              <div>
-                <h3 className="font-serif text-xl font-semibold mb-2">Phone</h3>
-                <a 
-                  href={`tel:${storeInfo.phone}`}
-                  className="text-lg text-accent hover:underline font-medium"
-                >
-                  {storeInfo.phone}
-                </a>
-                <p className="text-sm text-muted-foreground mt-1">Click to call</p>
-              </div>
-            </div>
-
-            {/* Email */}
-            <div className="flex gap-4">
-              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center shrink-0">
-                <Mail className="w-6 h-6 text-accent" />
-              </div>
-              <div>
-                <h3 className="font-serif text-xl font-semibold mb-2">Email</h3>
-                <a 
-                  href={`mailto:${storeInfo.email}`}
-                  className="text-lg text-accent hover:underline font-medium"
-                >
-                  {storeInfo.email}
-                </a>
-              </div>
-            </div>
-
-            {/* Hours */}
-            <div className="flex gap-4">
-              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center shrink-0">
-                <Clock className="w-6 h-6 text-accent" />
-              </div>
-              <div>
-                <h3 className="font-serif text-xl font-semibold mb-2">Business Hours</h3>
-                <div className="space-y-1">
-                  {storeInfo.hours.map((h) => (
-                    <div key={h.day} className="flex justify-between gap-8">
-                      <span className="text-muted-foreground">{h.day}</span>
-                      <span className="font-medium">{h.time}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-6">
-              <Button variant="hero" size="xl" className="flex-1" asChild>
-                <a href={`tel:${storeInfo.phone}`}>
-                  <Phone className="w-5 h-5 mr-2" />
-                  Call Now
-                </a>
-              </Button>
-              <Button variant="gold" size="xl" className="flex-1" asChild>
-                <a href={storeInfo.directionsUrl} target="_blank" rel="noopener noreferrer">
-                  <Navigation className="w-5 h-5 mr-2" />
-                  Get Directions
-                </a>
-              </Button>
-            </div>
-          </motion.div>
+            <div className="absolute inset-0 pointer-events-none border-[30px] border-white/5 group-hover:border-white/0 transition-all duration-1000" />
+          </div>
         </div>
       </div>
     </section>

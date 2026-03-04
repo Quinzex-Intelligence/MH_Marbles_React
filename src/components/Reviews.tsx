@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Star, Quote } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const reviews = [
   {
@@ -34,87 +35,72 @@ const reviews = [
 
 export function Reviews() {
   return (
-    <section id="reviews" className="py-24 bg-secondary/50">
-      <div className="container mx-auto px-4">
+    <section id="reviews" className="py-48 bg-background transition-colors duration-700 border-y border-foreground/5">
+      <div className="container mx-auto px-8 md:px-12">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          transition={{ duration: 1 }}
+          className="max-w-4xl text-left mb-32"
         >
-          <span className="text-accent font-medium tracking-wider uppercase text-sm">
-            Customer Reviews
-          </span>
-          <h2 className="font-serif text-4xl md:text-5xl font-semibold mt-3 mb-4">
-            What Our Customers Say
+          <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-accent mb-8 block">Reflections</span>
+          <h2 className="text-6xl md:text-8xl font-light text-foreground leading-tight tracking-tight italic mb-12">
+            The <span className="not-italic font-medium">Journal.</span>
           </h2>
-          <div className="flex items-center justify-center gap-3 mt-6">
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-6 h-6 fill-accent text-accent" />
-              ))}
-            </div>
-            <span className="text-lg font-semibold">4.9</span>
-            <span className="text-muted-foreground">• 500+ Reviews on Google</span>
+          <div className="flex items-center gap-6 mt-12 grayscale opacity-40">
+            <span className="text-5xl font-light tracking-tighter italic text-foreground">4.9</span>
+            <div className="h-12 w-px bg-foreground/20" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.4em] leading-relaxed text-foreground">
+              Consistently recognized for <br /> unparalleled stone carving
+            </p>
           </div>
         </motion.div>
 
-        {/* Reviews Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        {/* Reviews List - Minimalist Architectural Style */}
+        <div className="space-y-32 max-w-6xl">
           {reviews.map((review, index) => (
             <motion.div
               key={review.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -40 : 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-card p-8 rounded-2xl border border-border shadow-soft hover:shadow-medium transition-shadow"
+              transition={{ duration: 1.2, delay: index * 0.1 }}
+              className={cn(
+                "flex flex-col md:flex-row gap-16 items-baseline",
+                index % 2 === 0 ? "md:text-left" : "md:flex-row-reverse md:text-right"
+              )}
             >
-              {/* Quote Icon */}
-              <Quote className="w-10 h-10 text-accent/30 mb-4" />
-              
-              {/* Rating */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-accent text-accent" />
-                ))}
+              <div className="md:w-1/3">
+                <span className="text-4xl md:text-5xl font-light text-foreground tracking-tighter italic block mb-2">"{review.name}"</span>
+                <span className="text-[10px] font-bold text-accent uppercase tracking-[0.4em]">{review.location}</span>
               </div>
 
-              {/* Review Text */}
-              <p className="text-foreground/90 leading-relaxed mb-6">
-                "{review.text}"
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold">{review.name}</p>
-                  <p className="text-sm text-muted-foreground">{review.location}</p>
-                </div>
-                <span className="text-sm text-muted-foreground">{review.date}</span>
+              <div className="flex-1 space-y-6">
+                <p className="text-2xl md:text-3xl font-light text-foreground/70 leading-relaxed italic border-l md:border-l-0 md:border-x-0 border-accent/30 pl-8 md:pl-0">
+                  "{review.text}"
+                </p>
+                <p className="text-[10px] font-bold text-foreground/20 uppercase tracking-[0.6em]">Signed — {review.date}</p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Google Reviews Link */}
+        {/* Minimalist Archive Link */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center mt-12"
+          className="mt-48 text-center"
         >
           <a
             href="https://g.page/mh-marble-hyderabad"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-accent hover:underline font-medium"
+            className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent hover:text-foreground transition-colors border-b border-accent pb-2"
           >
-            View All Reviews on Google
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
-            </svg>
+            DISCOVER ALL TESTIMONIALS
           </a>
         </motion.div>
       </div>

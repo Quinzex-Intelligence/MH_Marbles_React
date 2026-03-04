@@ -6,9 +6,10 @@ export interface Tile {
   color: string;
   usage: string[];
   price?: string;
-  textureColor: string; // For 3D rendering
+  textureColor: string; // Keep for fallback/metadata
   roughness: number;
   metalness: number;
+  image?: string; // New field for premium images
 }
 
 export const tiles: Tile[] = [
@@ -24,6 +25,7 @@ export const tiles: Tile[] = [
     textureColor: '#f5f3ef',
     roughness: 0.1,
     metalness: 0.1,
+    image: '/calacatta-gold.png',
   },
   {
     id: 'statuario-white',
@@ -36,6 +38,7 @@ export const tiles: Tile[] = [
     textureColor: '#fafafa',
     roughness: 0.05,
     metalness: 0.15,
+    image: '/carrara_luxury_texture_1769248332961.png',
   },
   {
     id: 'emperador-dark',
@@ -48,6 +51,7 @@ export const tiles: Tile[] = [
     textureColor: '#4a3728',
     roughness: 0.3,
     metalness: 0.05,
+    image: '/travertine_roman_texture_1769248381252.png',
   },
   {
     id: 'nero-marquina',
@@ -60,6 +64,7 @@ export const tiles: Tile[] = [
     textureColor: '#1a1a1a',
     roughness: 0.1,
     metalness: 0.2,
+    image: '/nero-marquina.png',
   },
   // Granite Collection
   {
@@ -73,6 +78,7 @@ export const tiles: Tile[] = [
     textureColor: '#0d0d0d',
     roughness: 0.15,
     metalness: 0.3,
+    image: '/onyx_translucent_texture_dark_1769248364215.png',
   },
   {
     id: 'tan-brown',
@@ -110,6 +116,7 @@ export const tiles: Tile[] = [
     textureColor: '#ffffff',
     roughness: 0.05,
     metalness: 0.4,
+    image: '/uploaded_media_1769248031660.png',
   },
   {
     id: 'midnight-grey',
