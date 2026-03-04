@@ -17,9 +17,9 @@ const storeInfo = {
 
 export function Contact() {
   return (
-    <section id="contact" className="py-48 bg-background transition-colors duration-700 overflow-hidden">
+    <section id="contact" className="py-16 md:py-32 lg:py-48 bg-background transition-colors duration-700 overflow-hidden">
       <div className="container mx-auto px-8 md:px-12">
-        <div className="flex flex-col lg:flex-row gap-32 items-start">
+        <div className="flex flex-col lg:flex-row gap-12 md:gap-20 lg:gap-32 items-start">
           {/* Concierge Details */}
           <div className="lg:w-1/2">
             <motion.div
@@ -29,15 +29,15 @@ export function Contact() {
               transition={{ duration: 1 }}
             >
               <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-accent mb-8 block">Inquiries</span>
-              <h2 className="text-6xl md:text-8xl font-light text-foreground leading-tight tracking-tight italic mb-16">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-light text-foreground leading-tight tracking-tight italic mb-8 md:mb-16">
                 Personal <br />
                 <span className="not-italic font-medium">Concierge.</span>
               </h2>
 
-              <div className="space-y-16">
+              <div className="space-y-8 md:space-y-16">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent mb-4">The Gallery</p>
-                  <p className="text-2xl font-light text-foreground/80 leading-relaxed italic">
+                  <p className="text-lg md:text-2xl font-light text-foreground/80 leading-relaxed italic">
                     123 Tile Street, Kukatpally Housing Board Colony, <br />
                     Kukatpally, Hyderabad, Telangana 500072
                   </p>
@@ -46,13 +46,13 @@ export function Contact() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent mb-4">Direct Line</p>
-                    <a href="tel:+919876543210" className="text-2xl font-light text-foreground/80 hover:text-accent transition-colors italic">
+                    <a href="tel:+919876543210" className="text-lg md:text-2xl font-light text-foreground/80 hover:text-accent transition-colors italic">
                       +91 98765 43210
                     </a>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent mb-4">Electronic Mail</p>
-                    <a href="mailto:curator@mhmarble.com" className="text-2xl font-light text-foreground/80 hover:text-accent transition-colors italic">
+                    <a href="mailto:curator@mhmarble.com" className="text-lg md:text-2xl font-light text-foreground/80 hover:text-accent transition-colors italic break-all">
                       curator@mhmarble.com
                     </a>
                   </div>
@@ -86,7 +86,7 @@ export function Contact() {
           </div>
 
           {/* Minimalist Visual / Map Placeholder */}
-          <div className="flex-1 w-full aspect-square bg-black grayscale-[40%] hover:grayscale-0 transition-all duration-1000 overflow-hidden relative group">
+          <div className="flex-1 w-full aspect-video md:aspect-square bg-black grayscale-[40%] hover:grayscale-0 transition-all duration-1000 overflow-hidden relative group">
             <iframe
               src={storeInfo.mapUrl}
               width="100%"
@@ -96,7 +96,7 @@ export function Contact() {
               loading="lazy"
               title="MH Marbles Location"
             />
-            <div className="absolute inset-0 pointer-events-none border-[30px] border-white/5 group-hover:border-white/0 transition-all duration-1000" />
+            <div className="absolute inset-0 pointer-events-none border-[10px] md:border-[30px] border-white/5 group-hover:border-white/0 transition-all duration-1000" />
           </div>
         </div>
       </div>

@@ -17,17 +17,17 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-[#0A0A0A] text-white border-t border-white/5 py-32 px-8 md:px-12">
+    <footer className="bg-[#0A0A0A] text-white border-t border-white/5 py-12 md:py-20 lg:py-32 px-4 md:px-8 lg:px-12">
       <div className="container mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16 lg:gap-24">
           {/* Brand Signature */}
-          <div className="lg:col-span-2 space-y-12">
+          <div className="lg:col-span-2 space-y-6 md:space-y-12">
             <div className="flex flex-col">
-              <span className="text-3xl font-light tracking-[0.5em] text-white uppercase leading-tight">MH MARBLES</span>
+              <span className="text-xl md:text-2xl lg:text-3xl font-light tracking-[0.3em] md:tracking-[0.5em] text-white uppercase leading-tight">MH MARBLES</span>
               <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-accent ml-2">VISIONARY GALLERY</span>
             </div>
 
-            <p className="text-xl font-light text-white/40 leading-relaxed italic max-w-sm">
+            <p className="text-base md:text-xl font-light text-white/40 leading-relaxed italic max-w-sm">
               Curating the earth&apos;s most exquisite architectural statements
               for the discerning visionary since 1980.
             </p>
@@ -71,7 +71,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Signature */}
-        <div className="mt-32 pt-16 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-12">
+        <div className="mt-12 md:mt-20 lg:mt-32 pt-8 md:pt-16 border-t border-white/5 flex flex-col items-center gap-6 md:gap-12 md:flex-row md:justify-between">
           <div className="flex items-center gap-12 opacity-20 grayscale">
             <span className="text-[10px] font-bold tracking-[0.4em] uppercase">Milan</span>
             <span className="text-[10px] font-bold tracking-[0.4em] uppercase">Madrid</span>

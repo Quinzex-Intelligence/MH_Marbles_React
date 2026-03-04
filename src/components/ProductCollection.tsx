@@ -12,7 +12,7 @@ export function ProductCollection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   return (
-    <section ref={sectionRef} id="collection" className="py-64 bg-background overflow-hidden relative">
+    <section ref={sectionRef} id="collection" className="py-20 md:py-40 lg:py-64 bg-background overflow-hidden relative">
       {/* Background Grid Pattern to fill space */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
         <div className="grid grid-cols-12 h-full">
@@ -22,7 +22,7 @@ export function ProductCollection() {
         </div>
       </div>
 
-      <div className="container mx-auto px-8 md:px-12 mb-48">
+      <div className="container mx-auto px-4 md:px-8 lg:px-12 mb-16 md:mb-32 lg:mb-48">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -31,18 +31,18 @@ export function ProductCollection() {
           className="max-w-4xl"
         >
           <span className="text-[10px] font-bold tracking-[0.8em] uppercase text-accent mb-8 block font-inter">THE EXHIBITION</span>
-          <h2 className="text-7xl md:text-9xl font-light text-foreground leading-[0.85] tracking-tight italic mb-12">
+          <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-light text-foreground leading-[0.85] tracking-tight italic mb-6 md:mb-12">
             Sculptural <br />
             <span className="not-italic font-medium">Statements.</span>
           </h2>
-          <p className="text-xl md:text-2xl text-foreground/40 max-w-2xl font-light italic leading-loose">
+          <p className="text-base md:text-xl lg:text-2xl text-foreground/40 max-w-2xl font-light italic leading-relaxed md:leading-loose">
             An immersive walk through the earth’s most exquisite formations.
             Each slab is a singular masterpiece, curated for the visionary architect.
           </p>
         </motion.div>
       </div>
 
-      <div className="space-y-48 md:space-y-64">
+      <div className="space-y-20 md:space-y-48 lg:space-y-64">
         {tiles.slice(0, 6).map((tile, index) => (
           <ShowcaseItem key={tile.id} tile={tile} index={index} />
         ))}
@@ -89,11 +89,11 @@ function ShowcaseItem({ tile, index }: { tile: Tile; index: number }) {
 
   return (
     <div ref={containerRef} className={cn(
-      "relative container mx-auto px-8 md:px-12 flex flex-col md:flex-row items-center gap-16 md:gap-32",
-      !isEven && "md:flex-row-reverse text-right"
+      "relative container mx-auto px-4 md:px-8 lg:px-12 flex flex-col md:flex-row items-center gap-8 md:gap-16 lg:gap-32",
+      !isEven && "md:flex-row-reverse md:text-right"
     )}>
       {/* Immersive Slab Showcase */}
-      <div className="flex-1 w-full relative group min-h-[500px]">
+      <div className="flex-1 w-full relative group min-h-[300px] md:min-h-[500px]">
         <div ref={imageRef} className="w-full h-full relative z-10">
           <SlabImage image={tile.image} color={tile.textureColor} name={tile.name} />
 
@@ -102,19 +102,19 @@ function ShowcaseItem({ tile, index }: { tile: Tile; index: number }) {
             isEven ? "left-0" : "right-0"
           )}>
             <span className="text-[10px] font-bold text-foreground/30 tracking-[0.5em] uppercase block mb-3 font-inter">Curation Ref. 0{index + 1}</span>
-            <span className="text-4xl md:text-6xl font-light text-foreground italic tracking-tighter uppercase drop-shadow-sm">{tile.name}</span>
+            <span className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-light text-foreground italic tracking-tighter uppercase drop-shadow-sm">{tile.name}</span>
           </div>
         </div>
       </div>
 
       {/* Narrative Context */}
-      <div ref={textRef} className="flex-1 max-w-lg space-y-12 pt-12 md:pt-0">
+      <div ref={textRef} className="flex-1 max-w-lg space-y-6 md:space-y-12 pt-4 md:pt-0">
         <div className="space-y-6">
           <span className="text-[11px] font-bold text-accent uppercase tracking-[0.6em]">The Evolution of Space</span>
-          <h3 className="text-6xl md:text-7xl font-light text-foreground italic leading-none">{tile.color} <br /> <span className="not-italic font-medium">Composition.</span></h3>
+          <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-light text-foreground italic leading-none">{tile.color} <br /> <span className="not-italic font-medium">Composition.</span></h3>
         </div>
 
-        <p className="text-xl text-foreground/60 leading-relaxed font-light italic">
+        <p className="text-base md:text-lg lg:text-xl text-foreground/60 leading-relaxed font-light italic">
           Each slab of {tile.name} is a billion-year narrative written in mineral.
           Sourced from the heart of the most ancient quarries, it represents the
           pinnacle of natural crystallization. Its {tile.finish} surface

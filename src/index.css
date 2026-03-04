@@ -77,6 +77,14 @@
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.01em;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* Prevent MobileSticky from overlapping footer content on small screens */
+  @media (max-width: 1023px) {
+    body {
+      padding-bottom: 72px;
+    }
   }
 
   h1,

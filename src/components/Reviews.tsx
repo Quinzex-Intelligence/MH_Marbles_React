@@ -35,7 +35,7 @@ const reviews = [
 
 export function Reviews() {
   return (
-    <section id="reviews" className="py-48 bg-background transition-colors duration-700 border-y border-foreground/5">
+    <section id="reviews" className="py-16 md:py-32 lg:py-48 bg-background transition-colors duration-700 border-y border-foreground/5">
       <div className="container mx-auto px-8 md:px-12">
         {/* Section Header */}
         <motion.div
@@ -43,14 +43,14 @@ export function Reviews() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
-          className="max-w-4xl text-left mb-32"
+          className="max-w-4xl text-left mb-12 md:mb-20 lg:mb-32"
         >
           <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-accent mb-8 block">Reflections</span>
-          <h2 className="text-6xl md:text-8xl font-light text-foreground leading-tight tracking-tight italic mb-12">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-light text-foreground leading-tight tracking-tight italic mb-6 md:mb-12">
             The <span className="not-italic font-medium">Journal.</span>
           </h2>
           <div className="flex items-center gap-6 mt-12 grayscale opacity-40">
-            <span className="text-5xl font-light tracking-tighter italic text-foreground">4.9</span>
+            <span className="text-3xl md:text-5xl font-light tracking-tighter italic text-foreground">4.9</span>
             <div className="h-12 w-px bg-foreground/20" />
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] leading-relaxed text-foreground">
               Consistently recognized for <br /> unparalleled stone carving
@@ -59,7 +59,7 @@ export function Reviews() {
         </motion.div>
 
         {/* Reviews List - Minimalist Architectural Style */}
-        <div className="space-y-32 max-w-6xl">
+        <div className="space-y-12 md:space-y-20 lg:space-y-32 max-w-6xl">
           {reviews.map((review, index) => (
             <motion.div
               key={review.name}
@@ -73,12 +73,12 @@ export function Reviews() {
               )}
             >
               <div className="md:w-1/3">
-                <span className="text-4xl md:text-5xl font-light text-foreground tracking-tighter italic block mb-2">"{review.name}"</span>
+                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-foreground tracking-tighter italic block mb-2">"{review.name}"</span>
                 <span className="text-[10px] font-bold text-accent uppercase tracking-[0.4em]">{review.location}</span>
               </div>
 
               <div className="flex-1 space-y-6">
-                <p className="text-2xl md:text-3xl font-light text-foreground/70 leading-relaxed italic border-l md:border-l-0 md:border-x-0 border-accent/30 pl-8 md:pl-0">
+                <p className="text-base sm:text-lg md:text-2xl lg:text-3xl font-light text-foreground/70 leading-relaxed italic border-l md:border-l-0 md:border-x-0 border-accent/30 pl-4 md:pl-0">
                   "{review.text}"
                 </p>
                 <p className="text-[10px] font-bold text-foreground/20 uppercase tracking-[0.6em]">Signed — {review.date}</p>
@@ -92,7 +92,7 @@ export function Reviews() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mt-48 text-center"
+          className="mt-16 md:mt-32 lg:mt-48 text-center"
         >
           <a
             href="https://g.page/mh-marble-hyderabad"

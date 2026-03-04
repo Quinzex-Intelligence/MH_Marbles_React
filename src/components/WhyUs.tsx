@@ -36,7 +36,7 @@ const features = [
 
 export function WhyUs() {
   return (
-    <section id="why-us" className="py-48 bg-background transition-colors duration-700 overflow-hidden">
+    <section id="why-us" className="py-16 md:py-32 lg:py-48 bg-background transition-colors duration-700 overflow-hidden">
       <div className="container mx-auto px-8 md:px-12">
         <div className="flex flex-col lg:flex-row gap-24 items-center">
           {/* Narrative Content */}
@@ -48,7 +48,7 @@ export function WhyUs() {
               transition={{ duration: 1 }}
             >
               <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-accent mb-8 block">Architecture & Soul</span>
-              <h2 className="text-6xl md:text-7xl font-light text-foreground leading-[0.9] mb-12 italic">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-foreground leading-[0.9] mb-6 md:mb-12 italic">
                 The Mark <br />
                 <span className="not-italic font-medium">of Legacy.</span>
               </h2>
@@ -66,13 +66,13 @@ export function WhyUs() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-12 mt-20">
+              <div className="grid grid-cols-2 gap-6 md:gap-12 mt-10 md:mt-20">
                 <div className="space-y-2">
-                  <p className="text-4xl font-light text-foreground tracking-tighter italic">45+</p>
+                  <p className="text-3xl md:text-4xl font-light text-foreground tracking-tighter italic">45+</p>
                   <p className="text-[10px] font-bold text-accent uppercase tracking-[0.3em]">Years of Craft</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-4xl font-light text-foreground tracking-tighter italic">500+</p>
+                  <p className="text-3xl md:text-4xl font-light text-foreground tracking-tighter italic">500+</p>
                   <p className="text-[10px] font-bold text-accent uppercase tracking-[0.3em]">Signature Textures</p>
                 </div>
               </div>
@@ -86,8 +86,8 @@ export function WhyUs() {
               alt="Marble Workshop"
               className="w-full h-full object-cover opacity-80"
             />
-            <div className="absolute inset-0 border-[20px] border-white/5" />
-            <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-accent flex items-center justify-center p-12 text-center text-white">
+            <div className="absolute inset-0 border-[10px] md:border-[20px] border-white/5" />
+            <div className="absolute -bottom-6 -right-6 md:-bottom-12 md:-right-12 w-40 md:w-64 h-40 md:h-64 bg-accent flex items-center justify-center p-6 md:p-12 text-center text-white">
               <p className="text-[10px] font-bold uppercase tracking-[0.5em] leading-loose">
                 Mastering the Art of Natural Selection
               </p>
@@ -96,11 +96,11 @@ export function WhyUs() {
         </div>
 
         {/* Corporate Affiliations */}
-        <div className="mt-48 pt-24 border-t border-foreground/5">
+        <div className="mt-20 md:mt-32 lg:mt-48 pt-12 md:pt-24 border-t border-foreground/5">
           <p className="text-[9px] font-bold uppercase tracking-[0.6em] text-foreground/20 text-center mb-16 italic font-inter">Distinguished Partners</p>
-          <div className="flex flex-wrap justify-center gap-x-24 gap-y-12 items-center opacity-30 grayscale hover:grayscale-0 dark:invert transition-all duration-700">
+          <div className="flex flex-wrap justify-center gap-x-8 md:gap-x-16 lg:gap-x-24 gap-y-6 md:gap-y-12 items-center opacity-30 grayscale hover:grayscale-0 dark:invert transition-all duration-700">
             {['KAJARIA', 'SOMANY', 'JOHNSON', 'RAK', 'NITCO', 'ASIAN GRANITO'].map((brand) => (
-              <span key={brand} className="text-2xl font-light tracking-[0.4em] text-foreground italic">
+              <span key={brand} className="text-base md:text-lg lg:text-2xl font-light tracking-[0.2em] md:tracking-[0.4em] text-foreground italic">
                 {brand}
               </span>
             ))}

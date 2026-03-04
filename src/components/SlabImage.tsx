@@ -37,7 +37,7 @@ export function SlabImage({ image, color, name }: SlabImageProps) {
   };
 
   return (
-    <div className="w-full h-full min-h-[500px] flex items-center justify-center perspective-1000">
+    <div className="w-full h-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center perspective-1000">
       <motion.div
         ref={containerRef}
         onMouseMove={handleMouseMove}
@@ -51,7 +51,7 @@ export function SlabImage({ image, color, name }: SlabImageProps) {
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-[300px] h-[400px] md:w-[450px] md:h-[600px] group"
+        className="relative w-[240px] h-[320px] sm:w-[280px] sm:h-[370px] md:w-[350px] md:h-[460px] lg:w-[450px] lg:h-[600px] group"
       >
         {/* Shadow Layer */}
         <div className="absolute -inset-4 bg-foreground/10 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />

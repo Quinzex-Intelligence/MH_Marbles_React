@@ -51,7 +51,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
       </div>
 
-      <div className="container mx-auto px-12 relative z-10">
+      <div className="container mx-auto px-4 md:px-8 lg:px-12 relative z-10">
         <div className="max-w-5xl">
           <div ref={textRef}>
             <div className="hero-reveal flex items-center gap-4 mb-8">
@@ -61,20 +61,20 @@ export function Hero() {
               </span>
             </div>
 
-            <h1 className="hero-reveal text-5xl md:text-9xl font-light leading-[0.85] text-white mb-10 tracking-tight italic text-shadow-xl">
+            <h1 className="hero-reveal text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-light leading-[0.85] text-white mb-6 md:mb-10 tracking-tight italic text-shadow-xl">
               Timeless <br />
               <span className="not-italic font-medium text-white shadow-sm">Masterpieces.</span>
             </h1>
 
-            <p className="hero-reveal text-xl md:text-2xl text-white/90 max-w-2xl mb-16 font-light leading-relaxed tracking-wide italic">
+            <p className="hero-reveal text-base md:text-xl lg:text-2xl text-white/90 max-w-2xl mb-8 md:mb-16 font-light leading-relaxed tracking-wide italic">
               A curated sanctuary of the world&apos;s most exquisite stones,
               crafted for the architectural visionary.
             </p>
 
-            <div className="hero-reveal flex flex-wrap gap-8 md:gap-12 items-center">
+            <div className="hero-reveal flex flex-wrap gap-4 md:gap-8 lg:gap-12 items-center">
               <Button
                 size="xl"
-                className="bg-accent hover:bg-white hover:text-black text-white font-bold tracking-[0.2em] md:tracking-[0.4em] uppercase rounded-none h-16 md:h-20 px-8 md:px-14 transition-all duration-700 shadow-2xl relative z-20 w-full md:w-auto"
+                className="bg-accent hover:bg-white hover:text-black text-white font-bold tracking-[0.15em] md:tracking-[0.2em] lg:tracking-[0.4em] uppercase rounded-none h-14 md:h-16 lg:h-20 px-6 md:px-8 lg:px-14 text-xs md:text-sm transition-all duration-700 shadow-2xl relative z-20 w-full md:w-auto"
                 asChild
               >
                 <a href="/curation">

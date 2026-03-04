@@ -4,16 +4,16 @@ import { motion } from 'framer-motion';
 const Atelier = () => {
     return (
         <PageLayout title="The Atelier." subtitle="The Craft of Precision">
-            <section className="py-48 bg-background">
+            <section className="py-16 md:py-32 lg:py-48 bg-background">
                 <div className="container mx-auto px-8 md:px-12">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 lg:gap-32 items-center">
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 1 }}
                         >
                             <span className="text-[10px] font-bold text-accent tracking-[0.8em] uppercase mb-8 block">Phase 01</span>
-                            <h2 className="text-6xl md:text-8xl font-light text-foreground italic mb-12">The Selection.</h2>
+                            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-light text-foreground italic mb-6 md:mb-12">The Selection.</h2>
                             <p className="text-xl text-foreground/60 leading-loose italic max-w-lg">
                                 Our master curators journey to the earth's deepest veins.
                                 Only 1 in 1000 slabs meets the structural integrity and
@@ -29,7 +29,7 @@ const Atelier = () => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center mt-64">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 lg:gap-32 items-center mt-16 md:mt-32 lg:mt-64">
                         <div className="aspect-[3/4] bg-muted relative overflow-hidden order-2 lg:order-1">
                             <img
                                 src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&q=80&w=1200"
@@ -44,8 +44,8 @@ const Atelier = () => {
                             className="order-1 lg:order-2"
                         >
                             <span className="text-[10px] font-bold text-accent tracking-[0.8em] uppercase mb-8 block">Phase 02</span>
-                            <h2 className="text-6xl md:text-8xl font-light text-foreground italic mb-12 text-right">The Geometry.</h2>
-                            <p className="text-xl text-foreground/60 leading-loose italic max-w-lg ml-auto text-right">
+                            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-light text-foreground italic mb-6 md:mb-12 lg:text-right">The Geometry.</h2>
+                            <p className="text-base md:text-lg lg:text-xl text-foreground/60 leading-loose italic max-w-lg ml-auto lg:text-right">
                                 Using water-jet precision and diamond-tipped mastery,
                                 we carve stone to within a fraction of a millimeter.
                                 Architecture is the science of the precise.
@@ -54,7 +54,7 @@ const Atelier = () => {
                     </div>
 
                     {/* Filling blank space with high-density content */}
-                    <div className="mt-64 border-t border-foreground/5 pt-32">
+                    <div className="mt-16 md:mt-32 lg:mt-64 border-t border-foreground/5 pt-12 md:pt-20 lg:pt-32">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-16">
                             {[
                                 { val: "0.01mm", label: "Precision Margin" },
@@ -63,7 +63,7 @@ const Atelier = () => {
                                 { val: "45 Yrs", label: "Master Craft" }
                             ].map((stat, i) => (
                                 <div key={i} className="text-center space-y-4">
-                                    <p className="text-4xl font-light italic text-accent">{stat.val}</p>
+                                    <p className="text-2xl md:text-3xl lg:text-4xl font-light italic text-accent">{stat.val}</p>
                                     <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">{stat.label}</p>
                                 </div>
                             ))}
