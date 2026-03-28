@@ -2,42 +2,94 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import Index from "./pages/Index";
-import Curation from "./pages/Curation";
-import Legacy from "./pages/Legacy";
-import Journal from "./pages/Journal";
-import Concierge from "./pages/Concierge";
-import NotFound from "./pages/NotFound";
-
 import { ThemeProvider } from "next-themes";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { GalleryProvider } from "@/contexts/GalleryContext";
 
-import Atelier from "./pages/Atelier";
-import Innovation from "./pages/Innovation";
+import Index from "./pages/Index";
+import Collection from "./pages/Collection";
+import Showroom from "./pages/Showroom";
+import Heritage from "./pages/Heritage";
+import Blog from "./pages/Journal";
+import Contact from "./pages/Contact";
+import OurProcess from "./pages/OurProcess";
+import Sanitary from "./pages/Sanitary";
+import Test from "./pages/Test";
+import NotFound from "./pages/NotFound";
+import AdminRoute from "./components/admin/AdminRoute";
+import ScrollToTop from "./components/ScrollToTop";
+import ScrollToTopButton from "./components/ScrollToTopButton";
+import ScrollProgress from "./components/ScrollProgress";
+
+import AdminLayout from "./pages/admin/AdminLayout";
+import ProductManager from "./pages/admin/ProductManager";
+import BrandManager from "./pages/admin/BrandManager";
+import MediaManager from "./pages/admin/MediaManager";
+import SanitaryManager from "./pages/admin/SanitaryManager";
+import JournalManager from "./pages/admin/JournalManager";
+import MessageManager from "./pages/admin/MessageManager";
+import SystemConfig from "./pages/admin/SystemConfig";
+import Verification from "./pages/admin/Verification";
 
 const queryClient = new QueryClient();
+const GOOGLE_CLIENT_ID = "919556158056-2cifco8f1p5ssf6nkkmqclgeojp1iueb.apps.googleusercontent.com";
 
 const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/curation" element={<Curation />} />
-              <Route path="/legacy" element={<Legacy />} />
-              <Route path="/atelier" element={<Atelier />} />
-              <Route path="/innovation" element={<Innovation />} />
-              <Route path="/journal" element={<Journal />} />
-              <Route path="/concierge" element={<Concierge />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+          <AuthProvider>
+            <GalleryProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <ScrollProgress />
+                  <ScrollToTop />
+                  <ScrollToTopButton />
+                  <Routes>
+                    {/* Public Frontend */}
+                    <Route path="/" element={<Index />} />
+                    <Route path="/collection" element={<Collection />} />
+                    <Route path="/heritage" element={<Heritage />} />
+                    <Route path="/showroom" element={<Showroom />} />
+                    <Route path="/process" element={<OurProcess />} />
+                    <Route path="/journal" element={<Blog />} />
+                    <Route path="/sanitary" element={<Sanitary />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/test" element={<Test />} />
+                    
+                    {/* Admin Access */}
+                    <Route path="/admin/login" element={<Verification />} />
+                    <Route 
+                      path="/admin" 
+                      element={
+                        <AdminRoute>
+                          <AdminLayout />
+                        </AdminRoute>
+                      }
+                    >
+                      <Route index element={<Navigate to="/admin/products" replace />} />
+                      <Route path="products" element={<ProductManager />} />
+                      <Route path="brands" element={<BrandManager />} />
+                      <Route path="sanitary" element={<SanitaryManager />} />
+                      <Route path="media" element={<MediaManager />} />
+                      <Route path="journal" element={<JournalManager />} />
+                      <Route path="messages" element={<MessageManager />} />
+                      <Route path="settings" element={<SystemConfig />} />
+                    </Route>
+
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </BrowserRouter>
+              </TooltipProvider>
+            </GalleryProvider>
+          </AuthProvider>
+        </GoogleOAuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   </HelmetProvider>

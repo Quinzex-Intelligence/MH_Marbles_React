@@ -1,108 +1,171 @@
-import { motion } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGallery } from '@/contexts/GalleryContext';
 import { cn } from '@/lib/utils';
 
-const reviews = [
-  {
-    name: 'Rajesh Kumar',
-    location: 'Jubilee Hills, Hyderabad',
-    rating: 5,
-    text: 'Exceptional quality marble! The 3D visualizer helped us choose the perfect flooring for our new villa. The team was professional and delivery was prompt.',
-    date: '2 weeks ago',
-  },
-  {
-    name: 'Priya Sharma',
-    location: 'Gachibowli, Hyderabad',
-    rating: 5,
-    text: 'Best tiles showroom in Hyderabad! The variety is amazing and prices are competitive. Highly recommend their Italian marble collection.',
-    date: '1 month ago',
-  },
-  {
-    name: 'Mohammed Aziz',
-    location: 'Banjara Hills, Hyderabad',
-    rating: 5,
-    text: 'Used MH Marble for our commercial project. Their expertise and same-day delivery service made our tight deadline possible. Will definitely use again!',
-    date: '3 weeks ago',
-  },
-  {
-    name: 'Sunitha Reddy',
-    location: 'Madhapur, Hyderabad',
-    rating: 5,
-    text: 'The floor visualizer feature is brilliant! Could see exactly how the tiles would look in my living room before purchasing. Great customer service too.',
-    date: '1 month ago',
-  },
-];
+gsap.registerPlugin(ScrollTrigger);
 
 export function Reviews() {
+  const { journal } = useGallery();
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      
+      // Header Reveal
+      if (headerRef.current) {
+          gsap.from(headerRef.current.children, {
+              y: 40,
+              opacity: 0,
+              duration: 1.2,
+              stagger: 0.1,
+              ease: "power3.out",
+              scrollTrigger: {
+                  trigger: headerRef.current,
+                  start: "top 85%"
+              }
+          });
+      }
+
+      // Horizontal Scroll Track
+      const scrollContainer = scrollContainerRef.current;
+      if (!scrollContainer) return;
+
+      const totalScrollWidth = scrollContainer.scrollWidth - window.innerWidth;
+
+      gsap.to(scrollContainer, {
+        x: -totalScrollWidth,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: `+=${totalScrollWidth}`, // scroll duration depends on width
+          pin: true,
+          scrub: 1, // smooth scrub
+          anticipatePin: 1,
+        }
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [journal]);
+
   return (
-    <section id="reviews" className="py-16 md:py-32 lg:py-48 bg-background transition-colors duration-700 border-y border-foreground/5">
-      <div className="container mx-auto px-8 md:px-12">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="max-w-4xl text-left mb-12 md:mb-20 lg:mb-32"
-        >
-          <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-accent mb-8 block">Reflections</span>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-light text-foreground leading-tight tracking-tight italic mb-6 md:mb-12">
-            The <span className="not-italic font-medium">Journal.</span>
-          </h2>
-          <div className="flex items-center gap-6 mt-12 grayscale opacity-40">
-            <span className="text-3xl md:text-5xl font-light tracking-tighter italic text-foreground">4.9</span>
-            <div className="h-12 w-px bg-foreground/20" />
-            <p className="text-[10px] font-bold uppercase tracking-[0.4em] leading-relaxed text-foreground">
-              Consistently recognized for <br /> unparalleled stone carving
-            </p>
+    <section ref={sectionRef} id="reviews" className="relative bg-background h-screen overflow-hidden flex flex-col justify-center border-t border-border transition-colors duration-500">
+      {/* ── Background Elements ───────────────────────── */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+        <div className="absolute top-0 right-[8%] w-[1px] h-full bg-[#C8A96E]/10" />
+        <div className="absolute top-[20%] left-0 w-full h-[1px] bg-border/5" />
+        <div className="absolute top-[80%] left-0 w-full h-[1px] bg-border/5" />
+      </div>
+
+      {/* ── Fixed Header ────────────────────────────────── */}
+      <div className="relative z-10 px-6 md:px-[8%] pt-20 pb-12 w-full flex-shrink-0">
+        <div ref={headerRef}>
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-10 h-[1px] bg-[#C8A96E]" />
+            <span className="text-[9px] font-sans font-black tracking-[0.9em] uppercase text-[#C8A96E]">
+              The Journal
+            </span>
           </div>
-        </motion.div>
 
-        {/* Reviews List - Minimalist Architectural Style */}
-        <div className="space-y-12 md:space-y-20 lg:space-y-32 max-w-6xl">
-          {reviews.map((review, index) => (
-            <motion.div
-              key={review.name}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -40 : 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: index * 0.1 }}
-              className={cn(
-                "flex flex-col md:flex-row gap-16 items-baseline",
-                index % 2 === 0 ? "md:text-left" : "md:flex-row-reverse md:text-right"
-              )}
-            >
-              <div className="md:w-1/3">
-                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-foreground tracking-tighter italic block mb-2">"{review.name}"</span>
-                <span className="text-[10px] font-bold text-accent uppercase tracking-[0.4em]">{review.location}</span>
-              </div>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <h2 className="font-serif font-light text-foreground text-5xl sm:text-7xl md:text-[6.5rem] leading-[0.85] tracking-tight">
+              Written in <span className="italic text-accent/80">Stone.</span>
+            </h2>
 
-              <div className="flex-1 space-y-6">
-                <p className="text-base sm:text-lg md:text-2xl lg:text-3xl font-light text-foreground/70 leading-relaxed italic border-l md:border-l-0 md:border-x-0 border-accent/30 pl-4 md:pl-0">
-                  "{review.text}"
-                </p>
-                <p className="text-[10px] font-bold text-foreground/20 uppercase tracking-[0.6em]">Signed — {review.date}</p>
+            <div className="flex items-center gap-6">
+              <div className="text-right">
+                <div className="font-serif text-4xl md:text-6xl font-light text-foreground">4.9</div>
+                <div className="text-[8px] font-bold uppercase tracking-[0.4em] text-accent/50 mt-1">
+                  Avg Rating
+                </div>
               </div>
-            </motion.div>
-          ))}
+              <div className="w-[1px] h-12 bg-border" />
+              <p className="text-[9px] font-sans font-bold uppercase tracking-[0.4em] leading-relaxed text-foreground/30 max-w-[150px]">
+                Recognized for unparalleled curation
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* Minimalist Archive Link */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="mt-16 md:mt-32 lg:mt-48 text-center"
+      {/* ── Horizontal Scrolling Track ───────────────────── */}
+      <div className="relative z-20 flex-1 flex items-center overflow-hidden w-full">
+        <div 
+          ref={scrollContainerRef}
+          className="flex gap-8 md:gap-16 px-6 md:px-[8%] w-max pr-[20vw]" // extra padding at end to scroll past
         >
-          <a
-            href="https://g.page/mh-marble-hyderabad"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent hover:text-foreground transition-colors border-b border-accent pb-2"
-          >
-            DISCOVER ALL TESTIMONIALS
-          </a>
-        </motion.div>
+          {journal.map((entry, index) => (
+            <div 
+              key={entry.id}
+              className="w-[85vw] md:w-[600px] flex-shrink-0 group relative"
+            >
+              {/* Card Background & Borders */}
+              <div className="absolute inset-0 bg-background border border-border group-hover:border-accent/20 transition-colors duration-700 shadow-luxury" />
+              
+              <div className="relative p-10 md:p-14 h-full flex flex-col justify-between">
+                
+                {/* Top: Index & Meta */}
+                <div className="flex items-center justify-between mb-12">
+                   <span className="text-[10px] font-black font-sans uppercase tracking-[0.6em] text-[#C8A96E]/40 group-hover:text-[#C8A96E] transition-colors duration-500">
+                     {String(index + 1).padStart(2, '0')}
+                   </span>
+                   <div className="flex items-center gap-3 opacity-30 group-hover:opacity-100 transition-opacity duration-500">
+                     {[...Array(5)].map((_, i) => (
+                       <span key={i} className="text-[#C8A96E] text-xs">★</span>
+                     ))}
+                   </div>
+                </div>
+
+                {/* Middle: Quote */}
+                <div className="flex-1 flex items-center">
+                  <p className="font-serif text-2xl md:text-3xl lg:text-4xl font-light italic text-foreground/60 leading-relaxed group-hover:text-foreground transition-colors duration-700">
+                    "{entry.excerpt}"
+                  </p>
+                </div>
+
+                {/* Bottom: Client info & divider */}
+                <div className="mt-16">
+                  <div className="w-full h-[1px] bg-border mb-8 group-hover:bg-accent/20 transition-colors duration-500" />
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                     <div>
+                       <h4 className="font-serif text-xl text-foreground tracking-wide">{entry.title}</h4>
+                       <span className="text-[8px] font-black uppercase tracking-[0.5em] text-foreground/20 mt-2 block">
+                         Client &middot; Architectural Chronicle
+                       </span>
+                     </div>
+                     <span className="text-[8px] font-bold uppercase tracking-[0.4em] text-accent/40">
+                       {entry.date}
+                     </span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          ))}
+
+          {/* Final 'Discover All' card in the scroll track */}
+          <div className="w-[85vw] md:w-[400px] flex-shrink-0 flex items-center justify-center p-10">
+             <a
+              href="https://g.page/mh-marble-hyderabad"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center justify-center gap-6 p-12 border border-border hover:border-accent/30 bg-foreground/[0.01] hover:bg-foreground/[0.03] transition-all duration-700 cursor-pointer h-full w-full"
+            >
+              <div className="w-16 h-16 rounded-full border border-accent/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-accent transition-all duration-700">
+                 <span className="text-accent group-hover:text-white">↗</span>
+              </div>
+              <span className="text-[10px] font-black font-sans uppercase tracking-[0.5em] text-foreground/40 group-hover:text-foreground text-center leading-loose">
+                Discover All<br/>Testimonials
+              </span>
+            </a>
+          </div>
+
+        </div>
       </div>
     </section>
   );

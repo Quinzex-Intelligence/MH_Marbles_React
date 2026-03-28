@@ -1,54 +1,56 @@
 import { Link } from 'react-router-dom';
 
 const footerLinks = {
-  curation: [
-    { label: 'Italian Marble', href: '/curation' },
-    { label: 'Exotic Granite', href: '/curation' },
-    { label: 'Antique Texture', href: '/curation' },
-    { label: 'Signature Series', href: '/curation' },
+  collection: [
+    { label: 'Italian Marble', href: '/collection' },
+    { label: 'Exotic Granite', href: '/collection' },
+    { label: 'Antique Texture', href: '/collection' },
+    { label: 'Signature Series', href: '/collection' },
   ],
-  legacy: [
-    { label: 'Our Story', href: '/legacy' },
-    { label: 'The Journal', href: '/journal' },
-    { label: 'Private Gallery', href: '/concierge' },
-    { label: 'Concierge', href: '/concierge' },
+  heritage: [
+    { label: 'Our Story', href: '/heritage' },
+    { label: 'The Blog', href: '/blog' },
+    { label: 'Showroom', href: '/showroom' },
+    { label: 'Contact Us', href: '/contact' },
   ],
 };
 
 export function Footer() {
   return (
-    <footer className="bg-[#0A0A0A] text-white border-t border-white/5 py-12 md:py-20 lg:py-32 px-4 md:px-8 lg:px-12">
-      <div className="container mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16 lg:gap-24">
-          {/* Brand Signature */}
-          <div className="lg:col-span-2 space-y-6 md:space-y-12">
+    <footer className="bg-background text-foreground border-t border-border py-16 md:py-24 lg:py-32 px-6 md:px-[8%] transition-colors duration-500">
+      <div className="w-full max-w-none">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 lg:gap-24">
+          {/* Brand Signature - Matches Header */}
+          <div className="lg:col-span-2 space-y-8 md:space-y-12">
             <div className="flex flex-col">
-              <span className="text-xl md:text-2xl lg:text-3xl font-light tracking-[0.3em] md:tracking-[0.5em] text-white uppercase leading-tight">MH MARBLES</span>
-              <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-accent ml-2">VISIONARY GALLERY</span>
+              <span className="text-xl md:text-2xl lg:text-3xl font-serif tracking-[0.4em] text-foreground uppercase leading-tight">MH MARBLES</span>
+              <span className="text-[10px] font-sans font-black tracking-[0.8em] uppercase text-accent mt-1 ml-0.5">VISIONARY GALLERY</span>
             </div>
 
-            <p className="text-base md:text-xl font-light text-white/40 leading-relaxed italic max-w-sm">
+            <p className="text-base md:text-xl font-sans font-light text-foreground/30 leading-relaxed italic max-w-sm">
               Curating the earth&apos;s most exquisite architectural statements
               for the discerning visionary since 1980.
             </p>
 
-            <div className="space-y-6 pt-4">
-              <a href="tel:+919876543210" className="text-sm font-bold tracking-[0.4em] text-white hover:text-accent transition-colors block uppercase">
+            <div className="space-y-6 pt-4 text-foreground/80">
+              <a href="tel:+919876543210" className="text-[10px] font-sans font-bold tracking-[0.5em] hover:text-accent transition-all duration-500 block uppercase">
+                <span className="w-8 h-[1px] bg-accent/30 inline-block mr-4 align-middle" />
                 +91 98765 43210
               </a>
-              <a href="mailto:curator@mhmarble.com" className="text-sm font-bold tracking-[0.4em] text-white hover:text-accent transition-colors block uppercase">
-                CURATOR@MHMARBLE.COM
+              <a href="mailto:info@mhmarble.com" className="text-[10px] font-sans font-bold tracking-[0.5em] hover:text-accent transition-all duration-500 block uppercase">
+                <span className="w-8 h-[1px] bg-accent/30 inline-block mr-4 align-middle" />
+                INFO@MHMARBLE.COM
               </a>
             </div>
           </div>
 
           {/* Nav groups */}
           <div className="space-y-10">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">The Curation</h4>
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">The Collection</h4>
             <ul className="space-y-6">
-              {footerLinks.curation.map((link) => (
+              {footerLinks.collection.map((link) => (
                 <li key={link.label}>
-                  <Link to={link.href} className="text-sm font-light text-white/50 hover:text-white transition-colors italic tracking-widest">
+                  <Link to={link.href} className="text-sm font-light text-foreground/50 hover:text-foreground transition-colors italic tracking-widest">
                     {link.label}
                   </Link>
                 </li>
@@ -57,11 +59,11 @@ export function Footer() {
           </div>
 
           <div className="space-y-10">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">The Legacy</h4>
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">The Heritage</h4>
             <ul className="space-y-6">
-              {footerLinks.legacy.map((link) => (
+              {footerLinks.heritage.map((link) => (
                 <li key={link.label}>
-                  <Link to={link.href} className="text-sm font-light text-white/50 hover:text-white transition-colors italic tracking-widest">
+                  <Link to={link.href} className="text-sm font-light text-foreground/50 hover:text-foreground transition-colors italic tracking-widest">
                     {link.label}
                   </Link>
                 </li>
@@ -78,11 +80,12 @@ export function Footer() {
             <span className="text-[10px] font-bold tracking-[0.4em] uppercase">Hyderabad</span>
           </div>
 
-          <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.6em]">
+          <p className="text-[9px] font-bold text-foreground/20 uppercase tracking-[0.6em]">
             © {new Date().getFullYear()} MH MARBLES. CRAFTED FOR ETERNITY.
           </p>
 
           <div className="flex gap-10 opacity-30">
+            <Link to="/admin" className="text-[10px] font-bold tracking-[0.3em] uppercase hover:text-accent transition-colors">Admin Portal</Link>
             {['Facebook', 'Instagram', 'Pinterest'].map(social => (
               <a key={social} href="#" className="text-[10px] font-bold tracking-[0.3em] uppercase hover:text-accent transition-colors">
                 {social}

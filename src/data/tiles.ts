@@ -2,17 +2,33 @@ export interface Tile {
   id: string;
   name: string;
   category: 'marble' | 'granite' | 'vitrified' | 'wooden';
+  brand: string; // New field for provenance
+  size: string;  // New field for dimensions
+  fill: string; // fallback color for rendering
   finish: string;
+  finishes: string[]; // Options
+  thickness: string;
+  description: string;
+  origin: string;
   color: string;
   usage: string[];
   price?: string;
-  textureColor: string; // Keep for fallback/metadata
+  textureColor: string; 
   roughness: number;
   metalness: number;
-  image?: string; // New field for premium images
+  image?: string; 
+  space?: string; // e.g., 'Kitchen', 'Bathroom', 'Living Room', 'Outdoor'
 }
 
-export const tiles: Tile[] = [
+export interface SanitaryItem {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  price?: string;
+}
+
+export const initialTiles: Tile[] = [
   // Marble Collection
   {
     id: 'calacatta-gold',
@@ -25,7 +41,15 @@ export const tiles: Tile[] = [
     textureColor: '#f5f3ef',
     roughness: 0.1,
     metalness: 0.1,
+    brand: 'Italian Heritage',
+    size: '1200x2400 mm',
     image: '/calacatta-gold.png',
+    space: 'Living Room',
+    fill: '#f5f3ef',
+    finishes: ['Polished', 'Honed'],
+    thickness: '20',
+    description: 'A masterpiece from the Apuan Alps, featuring crisp white backgrounds with dramatic gold and grey veining.',
+    origin: 'Carrara, Italy'
   },
   {
     id: 'statuario-white',
@@ -38,7 +62,15 @@ export const tiles: Tile[] = [
     textureColor: '#fafafa',
     roughness: 0.05,
     metalness: 0.15,
+    brand: 'Carrara Elite',
+    size: '1200x2400 mm',
     image: '/carrara_luxury_texture_1769248332961.png',
+    space: 'Commercial',
+    fill: '#fafafa',
+    finishes: ['Polished'],
+    thickness: '18',
+    description: 'The epitome of classic luxury, known for its bright white background and bold, striking grey veins.',
+    origin: 'Carrara, Italy'
   },
   {
     id: 'emperador-dark',
@@ -51,7 +83,15 @@ export const tiles: Tile[] = [
     textureColor: '#4a3728',
     roughness: 0.3,
     metalness: 0.05,
+    brand: 'Levantina',
+    size: '800x1600 mm',
     image: '/travertine_roman_texture_1769248381252.png',
+    space: 'Living Room',
+    fill: '#4a3728',
+    finishes: ['Honed', 'Polished'],
+    thickness: '20',
+    description: 'Rich chocolate browns interspersed with brilliant beige and white veins, offering a warm, opulent atmosphere.',
+    origin: 'Spain'
   },
   {
     id: 'nero-marquina',
@@ -64,7 +104,15 @@ export const tiles: Tile[] = [
     textureColor: '#1a1a1a',
     roughness: 0.1,
     metalness: 0.2,
+    brand: 'Marquina Premium',
+    size: '800x1600 mm',
     image: '/nero-marquina.png',
+    space: 'Bathroom',
+    fill: '#1a1a1a',
+    finishes: ['Polished', 'Leather'],
+    thickness: '18',
+    description: 'A striking deep black stone adorned with contrasting stark white fossilized veining for dramatic impact.',
+    origin: 'Basque Country, Spain'
   },
   // Granite Collection
   {
@@ -78,7 +126,15 @@ export const tiles: Tile[] = [
     textureColor: '#0d0d0d',
     roughness: 0.15,
     metalness: 0.3,
+    brand: 'Galaxy Stone',
+    size: '600x1200 mm',
     image: '/onyx_translucent_texture_dark_1769248364215.png',
+    space: 'Kitchen',
+    fill: '#0d0d0d',
+    finishes: ['Polished', 'Flamed'],
+    thickness: '20',
+    description: 'A deep black granite naturally speckled with brilliant copper and bronze flakes that catch the light.',
+    origin: 'Andhra Pradesh, India'
   },
   {
     id: 'tan-brown',
@@ -91,6 +147,13 @@ export const tiles: Tile[] = [
     textureColor: '#8b6914',
     roughness: 0.2,
     metalness: 0.1,
+    brand: 'Indian Earth',
+    size: '600x600 mm',
+    fill: '#8b6914',
+    finishes: ['Polished', 'Leather'],
+    thickness: '18',
+    description: 'A dark brown granite highlighted with robust, darker black and grey mineral deposits.',
+    origin: 'Telangana, India'
   },
   {
     id: 'kashmir-white',
@@ -103,6 +166,13 @@ export const tiles: Tile[] = [
     textureColor: '#e8e4de',
     roughness: 0.15,
     metalness: 0.1,
+    brand: 'Kashmir Silks',
+    size: '600x600 mm',
+    fill: '#e8e4de',
+    finishes: ['Polished'],
+    thickness: '20',
+    description: 'A beautiful light grey granite with subtle brown and blackberry garnets sprinkled throughout.',
+    origin: 'Tamil Nadu, India'
   },
   // Vitrified Tiles
   {
@@ -116,7 +186,14 @@ export const tiles: Tile[] = [
     textureColor: '#ffffff',
     roughness: 0.05,
     metalness: 0.4,
+    brand: 'Arctic Series',
+    size: '600x1200 mm',
     image: '/uploaded_media_1769248031660.png',
+    fill: '#ffffff',
+    finishes: ['Glossy', 'Matte'],
+    thickness: '10',
+    description: 'Pure, unblemished white vitrified surface engineered for maximum light reflection and modern minimalism.',
+    origin: 'Engineered'
   },
   {
     id: 'midnight-grey',
@@ -129,6 +206,13 @@ export const tiles: Tile[] = [
     textureColor: '#4a4a4a',
     roughness: 0.4,
     metalness: 0.05,
+    brand: 'Nightshade',
+    size: '600x600 mm',
+    fill: '#4a4a4a',
+    finishes: ['Matte', 'Rustic'],
+    thickness: '10',
+    description: 'A deep, charcoal grey tile with a sophisticated matte finish, perfect for grounding large open spaces.',
+    origin: 'Engineered'
   },
   {
     id: 'beige-elegance',
@@ -141,6 +225,13 @@ export const tiles: Tile[] = [
     textureColor: '#d4c4a8',
     roughness: 0.25,
     metalness: 0.1,
+    brand: 'Beige Luxe',
+    size: '800x800 mm',
+    fill: '#d4c4a8',
+    finishes: ['Satin', 'Glossy'],
+    thickness: '12',
+    description: 'Warm, inviting beige tones with a subtle satin sheen that brings effortless elegance to any room.',
+    origin: 'Engineered'
   },
   // Wooden Finish
   {
@@ -154,6 +245,13 @@ export const tiles: Tile[] = [
     textureColor: '#c4a77d',
     roughness: 0.5,
     metalness: 0.0,
+    brand: 'Natural Wood',
+    size: '200x1200 mm',
+    fill: '#c4a77d',
+    finishes: ['Matte', 'Textured'],
+    thickness: '15',
+    description: 'Authentic oak wood texture with intricate grain patterns, offering the warmth of wood with the durability of tile.',
+    origin: 'Engineered'
   },
   {
     id: 'walnut-dark',
@@ -166,6 +264,13 @@ export const tiles: Tile[] = [
     textureColor: '#5c4033',
     roughness: 0.5,
     metalness: 0.0,
+    brand: 'Deep Walnut',
+    size: '200x1200 mm',
+    fill: '#5c4033',
+    finishes: ['Matte', 'Hand-scraped'],
+    thickness: '15',
+    description: 'Rich, dark walnut tones that emulate classic hardwood floors, providing a stately and luxurious foundation.',
+    origin: 'Engineered'
   },
 ];
 

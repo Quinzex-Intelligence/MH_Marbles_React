@@ -4,6 +4,8 @@ import "./index.css";
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 // Initialize Lenis smooth scroll
 const lenis = new Lenis({
     lerp: 0.1,
@@ -12,6 +14,9 @@ const lenis = new Lenis({
     smoothWheel: true,
 });
 
+// Synchronize ScrollTrigger with Lenis
+lenis.on('scroll', ScrollTrigger.update);
+
 function raf(time: number) {
     lenis.raf(time);
     requestAnimationFrame(raf);
@@ -19,4 +24,10 @@ function raf(time: number) {
 
 requestAnimationFrame(raf);
 
-createRoot(document.getElementById("root")!).render(<App />);
+import { HelmetProvider } from 'react-helmet-async';
+
+createRoot(document.getElementById("root")!).render(
+  <HelmetProvider>
+    <App />
+  </HelmetProvider>
+);

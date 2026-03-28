@@ -1,106 +1,162 @@
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+import { initialTiles } from '@/data/tiles';
+
+const SLIDES = [
+  { 
+      label: initialTiles[1].name, 
+      over: 'LUXURY', 
+      image: initialTiles[1].image || '' 
+  },
+  { 
+      label: initialTiles[3].name, 
+      over: 'OBSIDIAN', 
+      image: initialTiles[3].image || '' 
+  },
+  { 
+      label: initialTiles[2].name, 
+      over: 'ANTIQUITY', 
+      image: initialTiles[2].image || '' 
+  },
+];
 
 export function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
+  const [current, setCurrent] = useState(0);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const topTextRef = useRef<HTMLSpanElement>(null);
+  const bottomTextRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Background Parallax
-      gsap.to(bgRef.current, {
-        y: '20%',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
+    const ctx = gsap.context(() => {});
+    
+    // Initial load animation for the first slide image
+    gsap.fromTo(slideRefs.current[0], 
+        { scale: 1.1, filter: 'brightness(0.5)' }, 
+        { scale: 1, filter: 'brightness(1)', duration: 4, ease: "power2.out" }
+    );
+
+    const interval = setInterval(() => {
+        const currentSlide = slideRefs.current[current];
+        const nextIdx = (current + 1) % SLIDES.length;
+        const nextSlide = slideRefs.current[nextIdx];
+        
+        // Z-index management
+        if (currentSlide) gsap.set(currentSlide, { zIndex: 1 });
+        if (nextSlide) gsap.set(nextSlide, { zIndex: 2 });
+
+        // Crossfade image in
+        if (nextSlide) {
+            gsap.fromTo(nextSlide, 
+                { opacity: 0, scale: 1.05 }, 
+                { opacity: 1, scale: 1, duration: 2, ease: "power2.inOut", onComplete: () => {
+                    if (currentSlide) {
+                        gsap.set(currentSlide, { opacity: 0, scale: 1, zIndex: 0 });
+                    }
+                    setCurrent(nextIdx);
+                }}
+            );
         }
-      });
 
-      // Text Entrance
-      gsap.from('.hero-reveal', {
-        y: 60,
-        opacity: 0,
-        duration: 1.5,
-        stagger: 0.2,
-        ease: 'power4.out',
-        delay: 0.5
-      });
-    }, containerRef);
+        // Text stagger out and in
+        if (topTextRef.current && bottomTextRef.current) {
+            gsap.to([topTextRef.current, bottomTextRef.current], {
+                y: -40, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power2.in", onComplete: () => {
+                    if (topTextRef.current && bottomTextRef.current) {
+                        topTextRef.current.innerText = SLIDES[nextIdx].over;
+                        bottomTextRef.current.innerText = SLIDES[nextIdx].label;
+                        gsap.fromTo([topTextRef.current, bottomTextRef.current],
+                            { y: 40, opacity: 0 },
+                            { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out" }
+                        );
+                    }
+                }
+            });
+        }
 
-    return () => ctx.revert();
-  }, []);
+    }, 6000);
+
+    return () => {
+        clearInterval(interval);
+        ctx.revert();
+    };
+  }, [current]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-      {/* Cinematic Background Image */}
-      <div ref={bgRef} className="absolute inset-0 z-0 h-[120%] -top-[10%]">
-        <img
-          src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=2000"
-          alt="Luxury Architectural Interior"
-          className="w-full h-full object-cover opacity-60 grayscale-[20%]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
-      </div>
-
-      <div className="container mx-auto px-4 md:px-8 lg:px-12 relative z-10">
-        <div className="max-w-5xl">
-          <div ref={textRef}>
-            <div className="hero-reveal flex items-center gap-4 mb-8">
-              <div className="w-16 h-[1px] bg-accent" />
-              <span className="text-[11px] font-bold tracking-[0.6em] uppercase text-accent">
-                ESTABLISHED EXCELLENCE
-              </span>
-            </div>
-
-            <h1 className="hero-reveal text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-light leading-[0.85] text-white mb-6 md:mb-10 tracking-tight italic text-shadow-xl">
-              Timeless <br />
-              <span className="not-italic font-medium text-white shadow-sm">Masterpieces.</span>
-            </h1>
-
-            <p className="hero-reveal text-base md:text-xl lg:text-2xl text-white/90 max-w-2xl mb-8 md:mb-16 font-light leading-relaxed tracking-wide italic">
-              A curated sanctuary of the world&apos;s most exquisite stones,
-              crafted for the architectural visionary.
-            </p>
-
-            <div className="hero-reveal flex flex-wrap gap-4 md:gap-8 lg:gap-12 items-center">
-              <Button
-                size="xl"
-                className="bg-accent hover:bg-white hover:text-black text-white font-bold tracking-[0.15em] md:tracking-[0.2em] lg:tracking-[0.4em] uppercase rounded-none h-14 md:h-16 lg:h-20 px-6 md:px-8 lg:px-14 text-xs md:text-sm transition-all duration-700 shadow-2xl relative z-20 w-full md:w-auto"
-                asChild
-              >
-                <a href="/curation">
-                  DISCOVER THE COLLECTION
-                </a>
-              </Button>
-
-              <div className="hidden md:flex flex-col border-l border-white/20 pl-8 space-y-2 relative z-20">
-                <span className="text-[10px] font-bold text-accent uppercase tracking-[0.3em]">Curation 01</span>
-                <span className="text-sm font-light text-white/80 uppercase tracking-widest italic">Italian Marble Series</span>
-              </div>
-            </div>
-          </div>
+    <section className="relative h-screen w-full overflow-hidden bg-background">
+        
+        {/* Background Layer Container */}
+        <div className="absolute inset-0 z-0">
+            {SLIDES.map((slide, i) => (
+                <div 
+                    key={i} 
+                    ref={el => slideRefs.current[i] = el}
+                    className="absolute inset-0 w-full h-full will-change-transform"
+                    style={{ opacity: i === 0 ? 1 : 0, zIndex: 0 }}
+                >
+                    <img 
+                        src={slide.image} 
+                        alt={slide.label} 
+                        className="w-full h-full object-cover"
+                    />
+                    {/* Minimal Vignette for Text Contrast - Fixed Dark to prevent white shade in light mode */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0C0A08]/90 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0C0A08]/40 via-transparent to-[#0C0A08]/40" />
+                </div>
+            ))}
         </div>
-      </div>
 
-      {/* Fixed Scroll Indicator - Bottom Right */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-12 right-12 hidden md:flex flex-col items-center gap-4 z-10"
-      >
-        <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-white/40 rotate-90 mb-8 mt-4">SCROLL</span>
-        <div className="w-[1px] h-24 bg-gradient-to-b from-accent to-transparent" />
-      </motion.div>
+        {/* Foreground Cinematic Typography */}
+        <div className="relative z-20 w-full h-full flex flex-col justify-center items-center text-center px-4">
+            
+            <h2 className="flex flex-col items-center">
+                <span 
+                    ref={topTextRef}
+                    className="block font-sans font-black text-[12vw] md:text-[8vw] text-foreground/90 leading-[0.8] tracking-tighter mix-blend-overlay uppercase"
+                >
+                    {SLIDES[0].over}
+                </span>
+                <span 
+                    ref={bottomTextRef}
+                    className="block font-serif italic text-[8vw] md:text-[5vw] text-accent leading-[1.2] tracking-normal mt-2 drop-shadow-2xl"
+                >
+                    {SLIDES[0].label}
+                </span>
+            </h2>
+
+        </div>
+
+        {/* Cinematic UI Elements */}
+        <div className="absolute bottom-12 inset-x-0 z-30 flex justify-center items-center">
+            <div className="flex items-center gap-6">
+                <div className="text-[10px] font-bold font-sans tracking-[0.4em] text-white/50">
+                    0{current + 1}
+                </div>
+                {/* Minimal tracking bar */}
+                <div className="w-16 h-[2px] bg-white/20 relative overflow-hidden hidden md:block">
+                    <div 
+                        key={current}
+                        className="absolute top-0 left-0 h-full bg-accent animate-[grow_6s_linear_forwards]"
+                        style={{ '--tw-enter-opacity': '1' } as React.CSSProperties}
+                    />
+                </div>
+                <div className="text-[10px] font-bold font-sans tracking-[0.4em] text-white/50">
+                    0{SLIDES.length}
+                </div>
+            </div>
+        </div>
+
+        {/* Scroll Instruction */}
+        <div className="absolute bottom-12 right-8 md:bottom-16 md:right-16 z-30 hidden md:block">
+            <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-foreground/40">Scroll to Explore</span>
+        </div>
+
+        <style dangerouslySetInnerHTML={{__html: `
+            @keyframes grow {
+                from { width: 0%; }
+                to { width: 100%; }
+            }
+        `}} />
     </section>
   );
 }

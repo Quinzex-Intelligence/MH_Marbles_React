@@ -8,7 +8,7 @@
 
 @layer base {
   :root {
-    /* Heritage Pearl Light Theme */
+    /* Heritage Pearl Light Theme - Refined Ivory */
     --background: 40 30% 98%;
     /* #FAFAF7 */
     --foreground: 0 0% 4%;
@@ -17,8 +17,7 @@
     --primary: 0 0% 4%;
     --primary-foreground: 40 30% 98%;
 
-    --accent: 43 90% 50%;
-    /* Radiant Gold */
+    --accent: 38 65% 58%; /* Replaced with #C8A96E refined gold equivalent */
     --accent-foreground: 0 0% 4%;
 
     --secondary: 40 20% 94%;
@@ -38,43 +37,42 @@
 
     --border: 0 0% 88%;
     --input: 0 0% 88%;
-    --ring: 43 90% 50%;
+    --ring: 38 65% 58%;
 
     --radius: 0rem;
   }
 
   .dark {
-    /* Midnight Obsidian Dark Theme */
-    --background: 0 0% 4%;
-    --foreground: 40 30% 98%;
+    /* Obsidian & Champagne Dark Theme - Deep & Luxurious */
+    --background: 24 10% 5%; /* Replaced with #0C0A08 equivalent */
+    --foreground: 30 20% 96%;
 
-    --primary: 40 30% 98%;
-    --primary-foreground: 0 0% 4%;
+    --primary: 30 20% 96%;
+    --primary-foreground: 24 10% 5%;
 
-    --accent: 43 100% 65%;
-    /* Extra Radiant Gold */
-    --accent-foreground: 0 0% 4%;
+    --accent: 38 48% 61%; /* #C8A96E equivalent */
+    --accent-foreground: 24 10% 5%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 40 30% 98%;
+    --secondary: 24 12% 10%;
+    --secondary-foreground: 30 20% 96%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 24 10% 15%;
+    --muted-foreground: 30 15% 60%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 40 30% 98%;
+    --card: 24 10% 6%;
+    --card-foreground: 30 20% 96%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 43 100% 65%;
+    --border: 24 10% 12%; 
+    --input: 24 10% 12%;
+    --ring: 38 48% 61%;
   }
 
   * {
-    @apply border-border transition-colors duration-300;
+    @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased overflow-x-hidden;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.01em;
     padding-bottom: env(safe-area-inset-bottom, 0);
@@ -102,23 +100,34 @@
 @layer components {
   .text-gradient-gold {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(43 74% 49%) 0%, hsl(43 60% 70%) 100%);
+    background-image: linear-gradient(135deg, #C8A96E 0%, #B89A5E 100%);
+  }
+
+  .bg-gradient-sepia {
+    background: radial-gradient(circle at top right, rgba(200, 169, 110, 0.15), transparent 60%),
+                radial-gradient(circle at bottom left, rgba(24, 20, 15, 0.8), transparent 60%),
+                #0C0A08;
+  }
+
+  .glass-sepia {
+    @apply backdrop-blur-3xl border-white/5 shadow-2xl;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
   }
 
   .bg-gradient-luxury {
-    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
+    background: linear-gradient(135deg, #0C0A08 0%, #18140F 100%);
   }
 
   .bg-gradient-dark {
-    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%);
+    background: linear-gradient(180deg, #0C0A08 0%, #080705 100%);
   }
 
   .shadow-luxury {
-    box-shadow: 0 20px 60px -15px hsl(30 10% 15% / 0.15);
+    box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.8);
   }
 
   .shadow-gold {
-    box-shadow: 0 8px 30px -8px hsl(43 74% 49% / 0.3);
+    box-shadow: 0 10px 40px -10px rgba(200, 169, 110, 0.3);
   }
 
   /* Marble texture overlay */
@@ -170,20 +179,22 @@
   }
 
   /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
+  /* Hide scrollbar globally but maintain functionality */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
   }
 
-  ::-webkit-scrollbar-track {
-    @apply bg-muted;
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
   }
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 
