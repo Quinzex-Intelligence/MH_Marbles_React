@@ -1,30 +1,43 @@
 import { api } from '@/lib/api';
 import { Tile } from '@/data/tiles';
 
-// --- Product & Tile Service (Non-Invasive API Adapter) ---
-// This acts as a bridge to the backend without requiring Spring Boot modifications.
-// If a real backend endpoint is added later, simply update the URLs here.
+export interface ProductResponse {
+  next: string | null;
+  previous: string | null;
+  results: Tile[];
+}
 
 export const ProductService = {
-  getProducts: async () => {
-    console.log("[API] Fetching products from backend simulation...");
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+  getProducts: async (params?: Record<string, string | number>): Promise<ProductResponse> => {
+    console.log("[API] Fetching products from Django backend...");
+    const res = await api.get('/api/products/', { params });
     
-    // Attempt local storage sync first (Mocking a persistence layer)
-    const stored = localStorage.getItem('gallery_tiles');
-    if (stored) return JSON.parse(stored);
-    
-    return []; // Return empty if nothing found, caller will handle with initial data
+    // Map Django response if necessary, but assuming Tile matches Django result for now
+    return res.data;
   },
   
-  saveProducts: async (products: Tile[]) => {
-    console.log("[API] Persisting products to backend simulation...");
-    // In a real scenario, this would be: await api.post('/api/products', products);
-    localStorage.setItem('gallery_tiles', JSON.stringify(products));
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { success: true };
-  }
+  saveProduct: async (data: FormData) => {
+    console.log("[API] Persisting product to Django...");
+    const productId = data.get('id');
+    
+    if (productId && !productId.toString().startsWith('temp-')) {
+      const res = await api.patch(`/api/products/${productId}/`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      return res.data;
+    } else {
+      const res = await api.post('/api/products/', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      return res.data;
+    }
+  },
+
+  deleteProduct: async (id: string | number) => {
+    await api.delete(`/api/products/${id}/`);
+  },
+
+
 };
 
 export default ProductService;

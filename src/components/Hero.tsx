@@ -1,70 +1,78 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import gsap from 'gsap';
-
+import { useGallery } from '@/contexts/GalleryContext';
 import { initialTiles } from '@/data/tiles';
 
-const SLIDES = [
-  { 
-      label: initialTiles[1].name, 
-      over: 'LUXURY', 
-      image: initialTiles[1].image || '' 
-  },
-  { 
-      label: initialTiles[3].name, 
-      over: 'OBSIDIAN', 
-      image: initialTiles[3].image || '' 
-  },
-  { 
-      label: initialTiles[2].name, 
-      over: 'ANTIQUITY', 
-      image: initialTiles[2].image || '' 
-  },
-];
 
 export function Hero() {
+  const { media } = useGallery();
   const [current, setCurrent] = useState(0);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const topTextRef = useRef<HTMLSpanElement>(null);
   const bottomTextRef = useRef<HTMLSpanElement>(null);
 
+  // Stable refs so the interval never becomes stale or stacks
+  const currentRef = useRef(0);
+  const slidesRef = useRef<{ label: string; over: string; image: string }[]>([]);
+
+  const slides = useMemo(() => {
+    // 1. Define high-quality static fallbacks
+    const staticSlides = [
+        { label: 'Calacatta Gold', over: 'LUXURY', image: '/calacatta-gold.png' },
+        { label: 'Obsidian Black', over: 'OBSIDIAN', image: '/onyx_translucent_texture_dark_1769248364215.png' },
+        { label: 'Statuario White', over: 'ANTIQUITY', image: '/carrara_luxury_texture_1769248332961.png' },
+    ];
+
+    // 2. If no backend data yet, return static
+    if (!media || media.length === 0) return staticSlides;
+
+    // 3. Map backend Hero slides to the format expected by the Hero component
+    // Mapping: heading -> label, subtext -> over
+    return media.map(m => ({
+      label: m.heading || 'Exquisite Stone',
+      over: m.subtext || 'COLLECTION',
+      image: m.image || staticSlides[0].image
+    }));
+  }, [media]);
+
+  // Keep refs in sync with state
+  useEffect(() => { currentRef.current = current; }, [current]);
+  useEffect(() => { slidesRef.current = slides; }, [slides]);
+
+  // Interval created ONCE — reads state via stable refs
   useEffect(() => {
-    const ctx = gsap.context(() => {});
-    
-    // Initial load animation for the first slide image
-    gsap.fromTo(slideRefs.current[0], 
-        { scale: 1.1, filter: 'brightness(0.5)' }, 
+    gsap.fromTo(slideRefs.current[0],
+        { scale: 1.1, filter: 'brightness(0.5)' },
         { scale: 1, filter: 'brightness(1)', duration: 4, ease: "power2.out" }
     );
 
     const interval = setInterval(() => {
-        const currentSlide = slideRefs.current[current];
-        const nextIdx = (current + 1) % SLIDES.length;
+        const cur = currentRef.current;
+        const allSlides = slidesRef.current;
+        const nextIdx = (cur + 1) % allSlides.length;
+        const currentSlide = slideRefs.current[cur];
         const nextSlide = slideRefs.current[nextIdx];
-        
-        // Z-index management
+
         if (currentSlide) gsap.set(currentSlide, { zIndex: 1 });
         if (nextSlide) gsap.set(nextSlide, { zIndex: 2 });
 
-        // Crossfade image in
         if (nextSlide) {
-            gsap.fromTo(nextSlide, 
-                { opacity: 0, scale: 1.05 }, 
+            gsap.fromTo(nextSlide,
+                { opacity: 0, scale: 1.05 },
                 { opacity: 1, scale: 1, duration: 2, ease: "power2.inOut", onComplete: () => {
-                    if (currentSlide) {
-                        gsap.set(currentSlide, { opacity: 0, scale: 1, zIndex: 0 });
-                    }
+                    if (currentSlide) gsap.set(currentSlide, { opacity: 0, scale: 1, zIndex: 0 });
                     setCurrent(nextIdx);
                 }}
             );
         }
 
-        // Text stagger out and in
         if (topTextRef.current && bottomTextRef.current) {
             gsap.to([topTextRef.current, bottomTextRef.current], {
-                y: -40, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power2.in", onComplete: () => {
+                y: -40, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power2.in",
+                onComplete: () => {
                     if (topTextRef.current && bottomTextRef.current) {
-                        topTextRef.current.innerText = SLIDES[nextIdx].over;
-                        bottomTextRef.current.innerText = SLIDES[nextIdx].label;
+                        topTextRef.current.innerText = allSlides[nextIdx].over;
+                        bottomTextRef.current.innerText = allSlides[nextIdx].label;
                         gsap.fromTo([topTextRef.current, bottomTextRef.current],
                             { y: 40, opacity: 0 },
                             { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out" }
@@ -73,26 +81,22 @@ export function Hero() {
                 }
             });
         }
-
     }, 6000);
 
-    return () => {
-        clearInterval(interval);
-        ctx.revert();
-    };
-  }, [current]);
+    return () => clearInterval(interval);
+  }, []); // ← empty deps: created once, never stacks
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-background">
         
         {/* Background Layer Container */}
         <div className="absolute inset-0 z-0">
-            {SLIDES.map((slide, i) => (
+            {slides.map((slide, i) => (
                 <div 
                     key={i} 
                     ref={el => slideRefs.current[i] = el}
                     className="absolute inset-0 w-full h-full will-change-transform"
-                    style={{ opacity: i === 0 ? 1 : 0, zIndex: 0 }}
+                    style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 1 : 0 }}
                 >
                     <img 
                         src={slide.image} 
@@ -114,13 +118,13 @@ export function Hero() {
                     ref={topTextRef}
                     className="block font-sans font-black text-[12vw] md:text-[8vw] text-foreground/90 leading-[0.8] tracking-tighter mix-blend-overlay uppercase"
                 >
-                    {SLIDES[0].over}
+                    {slides[current].over}
                 </span>
                 <span 
                     ref={bottomTextRef}
                     className="block font-serif italic text-[8vw] md:text-[5vw] text-accent leading-[1.2] tracking-normal mt-2 drop-shadow-2xl"
                 >
-                    {SLIDES[0].label}
+                    {slides[current].label}
                 </span>
             </h2>
 
@@ -129,19 +133,19 @@ export function Hero() {
         {/* Cinematic UI Elements */}
         <div className="absolute bottom-12 inset-x-0 z-30 flex justify-center items-center">
             <div className="flex items-center gap-6">
-                <div className="text-[10px] font-bold font-sans tracking-[0.4em] text-white/50">
+                <div className="text-[10px] font-bold font-sans tracking-[0.4em] text-foreground/50">
                     0{current + 1}
                 </div>
                 {/* Minimal tracking bar */}
-                <div className="w-16 h-[2px] bg-white/20 relative overflow-hidden hidden md:block">
+                <div className="w-16 h-[2px] bg-foreground/20 relative overflow-hidden hidden md:block">
                     <div 
                         key={current}
                         className="absolute top-0 left-0 h-full bg-accent animate-[grow_6s_linear_forwards]"
                         style={{ '--tw-enter-opacity': '1' } as React.CSSProperties}
                     />
                 </div>
-                <div className="text-[10px] font-bold font-sans tracking-[0.4em] text-white/50">
-                    0{SLIDES.length}
+                <div className="text-[10px] font-bold font-sans tracking-[0.4em] text-foreground/50">
+                    0{slides.length}
                 </div>
             </div>
         </div>

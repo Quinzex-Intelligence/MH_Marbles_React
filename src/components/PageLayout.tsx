@@ -70,9 +70,9 @@ export function PageLayout({ children, title, subtitle }: PageLayoutProps) {
     const remainingWords = words.slice(1).join(' ');
 
     return (
-        <div className="min-h-screen bg-[#0C0A08] w-full overflow-x-hidden text-white transition-colors duration-1000">
+        <div className="min-h-screen bg-background w-full max-w-[100vw] overflow-clip text-foreground transition-colors duration-1000">
             <Header />
-            <main className="pt-28 pb-16 md:pt-40 md:pb-24 lg:pt-56 lg:pb-32 w-full">
+            <main className="pt-32 pb-16 md:pt-44 md:pb-24 lg:pt-60 lg:pb-32 w-full">
                 
                 {/* ── Cinematic Page Header ─────────────────────────────────── */}
                 <div className="w-full px-6 md:px-[8%] relative z-10">
@@ -87,11 +87,11 @@ export function PageLayout({ children, title, subtitle }: PageLayoutProps) {
                         
                         <h1 
                             ref={titleRef} 
-                            className="text-6xl sm:text-7xl md:text-[9rem] lg:text-[11rem] font-serif font-light text-white leading-[0.85] tracking-tighter"
+                            className="text-5xl sm:text-7xl md:text-[7.5rem] lg:text-[9rem] font-serif font-light text-foreground leading-[0.85] tracking-tighter"
                         >
                             {/* Word wrapper for clipping reveals */}
                             <div className="overflow-hidden pb-4">
-                               <div className="word-wrap inline-block italic text-white/90">
+                               <div className="word-wrap inline-block italic text-foreground/90">
                                    {firstWord}
                                </div>
                             </div>

@@ -5,6 +5,13 @@ import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from 'gsap';
+import { HelmetProvider } from 'react-helmet-async';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { queryClient, persister } from '@/lib/queryClient';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Initialize Lenis smooth scroll
 const lenis = new Lenis({
@@ -15,7 +22,7 @@ const lenis = new Lenis({
 });
 
 // Synchronize ScrollTrigger with Lenis
-lenis.on('scroll', ScrollTrigger.update);
+lenis.on('scroll', () => ScrollTrigger.update());
 
 function raf(time: number) {
     lenis.raf(time);
@@ -24,10 +31,15 @@ function raf(time: number) {
 
 requestAnimationFrame(raf);
 
-import { HelmetProvider } from 'react-helmet-async';
-
 createRoot(document.getElementById("root")!).render(
-  <HelmetProvider>
-    <App />
-  </HelmetProvider>
+  <PersistQueryClientProvider 
+    client={queryClient} 
+    persistOptions={{ persister }}
+  >
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+    {/* TanStack Query DevTools — dev only, invisible in production */}
+    <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+  </PersistQueryClientProvider>
 );

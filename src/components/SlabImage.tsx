@@ -57,7 +57,7 @@ export function SlabImage({ image, color, name }: SlabImageProps) {
         <div className="absolute -inset-4 bg-foreground/10 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
         {/* Main Slab Image Container */}
-        <div className="relative w-full h-full overflow-hidden shadow-2xl ring-1 ring-white/20">
+        <div className="relative w-full h-full overflow-hidden shadow-2xl ring-1 ring-foreground/20">
           {image ? (
             <img 
               src={image} 

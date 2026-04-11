@@ -1,0 +1,63 @@
+=================================================================
+PROJECT QUOTATION: MH MARBLES VISIONARY ARCHITECTURAL GALLERY
+=================================================================
+PREPARED FOR: MH MARBLES
+PROJECT TYPE: BESPOKE CINEMATIC FRONTEND & SECURE ADMIN PORTAL
+DATE: MARCH 2026
+=================================================================
+
+1. EXECUTIVE SUMMARY: "THE DIGITAL SHOWROOM"
+-----------------------------------------------------------------
+In the luxury marble industry, your website IS your flagship 
+showroom. We have engineered a platform that doesn't just "show" 
+images—it "stages" an experience. 
+
+This is not a "website" in the traditional sense; it is a custom 
+Digital Product. We have moved away from commodity templates to 
+create a bespoke architectural terminal that aligns perfectly 
+with the premium nature of Italian stone curation.
+
+2. WHY THIS INVESTMENT MATTERS: STRATEGIC RATIONALE
+-----------------------------------------------------------------
+A. THE PSYCHOLOGY OF LUXURY:
+Clients spending lakhs on signature stone expect perfection. Our 
+"Cinematic Motion Design" (GSAP reveals and smooth-scroll 
+transitions) creates a subconscious sense of stability, quality, 
+and trust. If the digital experience feels high-end, the physical 
+product is instantly perceived as more valuable.
+
+B. TECHNICAL BARRIER TO ENTRY:
+Ours is a "Creative Dev" build. 90% of agencies use templates 
+that result in jittery, slow sites. We used custom physics-based 
+animation engines that are found only in Tier-1 international 
+brands (e.g., Rolex, Patek Philippe). This gives you an 
+insurmountable lead over local competitors.
+
+C. ADMIN AUTONOMY & LONG-TERM ROI:
+Most sites require an AMC (Annual Maintenance Contract) or 
+monthly SaaS fees to change content. We have built a proprietary 
+"Admin Command Center" that gives you 100% control over your:
+- Journal / Blog editorial
+- Private Message Vault
+- Project Portfolio
+This eliminates recurring platform fees and developer reliance.
+
+3. TECHNICAL STACK & ARCHITECTURE
+-----------------------------------------------------------------
+Core Engine:      React 18 & Vite (Enterprise Performance)
+Language:         TypeScript (Institutional Stability)
+Motion Engine:    GSAP & Framer Motion (High-Fidelity Animation)
+Styling:          Advanced HSL Design Tokens (Bespoke UI)
+Security:         Google Cloud OAuth (Encrypted Data Access)
+
+4. PROJECT VALUATION (SUMMARY)
+-----------------------------------------------------------------
+DELIVERABLE                               VALUE (INR)
+-----------------------------------------------------------------
+Immersive Motion System & Reveal UX:      ₹3,00,000
+Bespoke Luxury Design Architecture:       ₹2,00,000
+Proprietary Admin Command Center:         ₹4,50,000
+Performance & SEO Infrastructure:         ₹1,50,000
+-----------------------------------------------------------------
+TOTAL PROJECT VALUATION:                  ₹11,00,000 (Base)
+=================================================================

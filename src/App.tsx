@@ -18,6 +18,7 @@ import Contact from "./pages/Contact";
 import OurProcess from "./pages/OurProcess";
 import Sanitary from "./pages/Sanitary";
 import Test from "./pages/Test";
+import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
 import AdminRoute from "./components/admin/AdminRoute";
 import ScrollToTop from "./components/ScrollToTop";
@@ -26,6 +27,7 @@ import ScrollProgress from "./components/ScrollProgress";
 
 import AdminLayout from "./pages/admin/AdminLayout";
 import ProductManager from "./pages/admin/ProductManager";
+import CategoryManager from "./pages/admin/CategoryManager";
 import BrandManager from "./pages/admin/BrandManager";
 import MediaManager from "./pages/admin/MediaManager";
 import SanitaryManager from "./pages/admin/SanitaryManager";
@@ -37,7 +39,9 @@ import Verification from "./pages/admin/Verification";
 const queryClient = new QueryClient();
 const GOOGLE_CLIENT_ID = "919556158056-2cifco8f1p5ssf6nkkmqclgeojp1iueb.apps.googleusercontent.com";
 
-const App = () => (
+const App = () => {
+  console.log("App Rendering - Current Path:", window.location.pathname);
+  return (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
@@ -54,6 +58,7 @@ const App = () => (
                   <Routes>
                     {/* Public Frontend */}
                     <Route path="/" element={<Index />} />
+                    <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/collection" element={<Collection />} />
                     <Route path="/heritage" element={<Heritage />} />
                     <Route path="/showroom" element={<Showroom />} />
@@ -75,6 +80,7 @@ const App = () => (
                     >
                       <Route index element={<Navigate to="/admin/products" replace />} />
                       <Route path="products" element={<ProductManager />} />
+                      <Route path="categories" element={<CategoryManager />} />
                       <Route path="brands" element={<BrandManager />} />
                       <Route path="sanitary" element={<SanitaryManager />} />
                       <Route path="media" element={<MediaManager />} />
@@ -93,6 +99,7 @@ const App = () => (
       </ThemeProvider>
     </QueryClientProvider>
   </HelmetProvider>
-);
+  );
+};
 
 export default App;

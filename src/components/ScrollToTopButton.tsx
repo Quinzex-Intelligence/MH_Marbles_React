@@ -7,16 +7,19 @@ export function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    let rafId: number | null = null;
     const toggleVisibility = () => {
-      if (window.scrollY > 500) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      if (rafId) return; // throttle via rAF
+      rafId = requestAnimationFrame(() => {
+        setIsVisible(window.scrollY > 500);
+        rafId = null;
+      });
     };
-
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', toggleVisibility);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const scrollToTop = () => {
@@ -38,8 +41,8 @@ export function ScrollToTopButton() {
           onClick={scrollToTop}
           className={cn(
             "fixed bottom-8 right-8 z-50 p-4 transition-all duration-300 group",
-            "bg-background/80 backdrop-blur-xl border border-border shadow-luxury rounded-none",
-            "hover:border-accent hover:bg-background"
+            "bg-background border border-border shadow-luxury rounded-none",
+            "hover:border-accent"
           )}
           aria-label="Scroll to top"
         >

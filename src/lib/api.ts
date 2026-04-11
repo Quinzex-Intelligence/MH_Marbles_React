@@ -1,24 +1,31 @@
 import axios from 'axios';
-import { Tile } from '@/data/tiles';
 
-const BACKEND_URL = 'http://localhost:8080';
+const DJANGO_URL = import.meta.env.VITE_DJANGO_URL || 'http://localhost:8000';
+const SPRING_URL = import.meta.env.VITE_SPRING_URL || 'http://localhost:8080';
 
+// Default instance for Django (Inventory, Products, etc.)
 export const api = axios.create({
-  baseURL: BACKEND_URL,
-  withCredentials: true, // Required for HttpOnly cookies
+  baseURL: DJANGO_URL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Flag to prevent multiple refresh calls simultaneously
-let isRefreshing = false;
+// Second instance for Spring Boot (Auth, Journal, etc.)
+export const springApi = axios.create({
+  baseURL: SPRING_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
+let isRefreshing = false;
 interface FailedRequest {
   resolve: (token: string | null) => void;
   reject: (error: unknown) => void;
 }
-
 let failedQueue: FailedRequest[] = [];
 
 const processQueue = (error: Error | null, token: string | null = null) => {
@@ -32,50 +39,73 @@ const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue = [];
 };
 
+// Response Interceptor for Django API (to handle 401s via Spring Refresh)
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    // If error is 401 and not already a retry
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Django can return 401 or 403 when credentials are missing/invalid
+    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then(() => {
-            return api(originalRequest);
-          })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
+          .then(() => api(originalRequest))
+          .catch((err) => Promise.reject(err));
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        // Call the backend refresh endpoint
-        // The backend handles the refresh_token cookie and updates the access_token cookie
-        await axios.post(`${BACKEND_URL}/auth/refresh`, {}, { withCredentials: true });
-        
+        // Authenticated sessions are managed by Spring Boot
+        await axios.post(`${SPRING_URL}/auth/refresh`, {}, { withCredentials: true });
         processQueue(null);
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
-        
-        // If refresh fails, the session is truly dead
-        // You might want to trigger a logout or redirect here
-        // For now we just reject the promise
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
       }
     }
-
     return Promise.reject(error);
   }
 );
 
+// Response Interceptor for Spring API (to handle 401s via silent refresh)
+springApi.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // If the request fails with 401 and it's not already a retry or a refresh attempt
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/auth/refresh')) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(() => springApi(originalRequest))
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        await axios.post(`${SPRING_URL}/auth/refresh`, {}, { withCredentials: true });
+        processQueue(null);
+        return springApi(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        // If refresh fails, we might want to redirect to login or clear auth state
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;

@@ -13,7 +13,8 @@ import {
   ShieldCheck,
   Bell,
   Search,
-  Droplets
+  Droplets,
+  Building2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -25,11 +26,12 @@ const AdminLayout = () => {
   const { messages } = useGallery();
   const location = useLocation();
   const navigate = useNavigate();
-  const unreadCount = messages.filter(m => !m.read).length;
+  const unreadCount = messages.filter(m => !m.is_read).length;
 
   const navigation = [
     { name: 'Products', href: '/admin/products', icon: Layers },
-    { name: 'Brands', href: '/admin/brands', icon: Tag },
+    { name: 'Categories', href: '/admin/categories', icon: LayoutDashboard },
+    { name: 'Companies', href: '/admin/brands', icon: Building2 },
     { name: 'Sanitary', href: '/admin/sanitary', icon: Droplets },
     { name: 'Media', href: '/admin/media', icon: Video },
     { name: 'Journal', href: '/admin/journal', icon: FileText },
@@ -41,22 +43,30 @@ const AdminLayout = () => {
     <div className="dark min-h-screen bg-background text-foreground font-sans selection:bg-accent/30">
       <div className="flex min-h-screen">
       {/* Cinematic Sidebar */}
-      <aside className="w-80 border-r border-white/5 bg-card flex flex-col sticky top-0 h-screen overflow-hidden">
+      <aside className="w-80 border-r border-foreground/5 bg-card flex flex-col sticky top-0 h-screen overflow-hidden">
         {/* Brand Identity */}
-        <div className="p-10 border-b border-white/5 group bg-gradient-to-b from-white/[0.02] to-transparent">
-          <Link to="/" className="flex items-center gap-4 group-hover:opacity-80 transition-opacity">
-            <div className="w-12 h-12 bg-white flex items-center justify-center rounded-none rotate-45 group-hover:rotate-90 transition-transform duration-700">
-              <span className="text-black text-xl font-serif font-bold -rotate-45 group-hover:-rotate-90 transition-transform duration-700">M</span>
+        <div className="p-6 border-b border-foreground/5 group bg-gradient-to-b from-white/[0.02] to-transparent">
+          <div className="flex items-center gap-5">
+            <div className="relative">
+              <img
+                src="/Logo1.png"
+                alt="MH Marble Logo"
+                className="w-14 h-14 object-contain logo-visibility"
+              />
             </div>
-            <div>
-              <h1 className="text-sm font-bold tracking-[0.3em] uppercase text-white leading-none mb-1">MH Marble</h1>
-              <p className="text-[9px] text-accent tracking-[0.2em] uppercase font-sans font-bold opacity-60">Admin Portal</p>
+            <div className="flex flex-col text-left">
+              <span className="text-xl font-black text-foreground tracking-[0.25em] leading-none mb-1">
+                MH<span className="text-accent"> MARBLE</span>
+              </span>
+              <span className="text-[7px] font-bold text-foreground/40 tracking-[0.4em] uppercase whitespace-nowrap">
+                Architectural Excellence
+              </span>
             </div>
-          </Link>
+          </div>
         </div>
 
         {/* Navigation Registry */}
-        <nav className="flex-1 px-6 py-12 space-y-2 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 px-6 py-6 space-y-2 overflow-y-auto custom-scrollbar">
           {navigation.map((item) => {
             const isActive = location.pathname === item.href;
             return (
@@ -66,19 +76,19 @@ const AdminLayout = () => {
                 className={cn(
                   "group flex items-center justify-between px-6 py-4 transition-all duration-500 rounded-none relative overflow-hidden",
                   isActive 
-                    ? "text-white bg-white/[0.03] border-l-2 border-accent" 
-                    : "text-white/40 hover:text-white hover:bg-white/[0.01]"
+                    ? "text-foreground bg-white/[0.03] border-l-2 border-accent" 
+                    : "text-foreground/40 hover:text-foreground hover:bg-white/[0.01]"
                 )}
               >
                 <div className="flex items-center gap-5 z-10">
                   <item.icon className={cn(
                     "w-5 h-5 transition-colors duration-500",
-                    isActive ? "text-accent" : "text-white/20 group-hover:text-white/40"
+                    isActive ? "text-accent" : "text-foreground/20 group-hover:text-foreground/40"
                   )} />
                   <span className="text-xs font-bold tracking-[0.2em] uppercase">{item.name}</span>
                 </div>
                 {item.badge !== undefined && item.badge > 0 && (
-                  <span className="bg-accent text-black text-[9px] font-black px-2 py-0.5 rounded-none z-10">
+                  <span className="bg-accent text-background text-[9px] font-black px-2 py-0.5 rounded-none z-10">
                     {item.badge}
                   </span>
                 )}
@@ -88,28 +98,28 @@ const AdminLayout = () => {
         </nav>
 
         {/* Curator Profile */}
-        <div className="p-8 border-t border-white/5 bg-black/40 backdrop-blur-xl">
+        <div className="p-8 border-t border-foreground/5 bg-background/40 backdrop-blur-xl">
           <div className="flex items-center gap-4 mb-8">
             <div className="relative group">
                {user?.picture ? (
-                 <img src={user.picture} alt="" className="w-12 h-12 rounded-none border border-white/10 group-hover:border-accent transition-colors grayscale" />
+                 <img src={user.picture} alt="" className="w-12 h-12 rounded-none border border-foreground/10 group-hover:border-accent transition-colors grayscale" />
                ) : (
-                 <div className="w-12 h-12 bg-white/5 text-white/40 flex items-center justify-center text-xs font-bold border border-white/10 group-hover:border-accent transition-all">
+                 <div className="w-12 h-12 bg-white/5 text-foreground/40 flex items-center justify-center text-xs font-bold border border-foreground/10 group-hover:border-accent transition-all">
                    {user?.name?.[0] || 'C'}
                  </div>
                )}
                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-accent border-2 border-[#080808] flex items-center justify-center">
-                 <ShieldCheck className="w-2.5 h-2.5 text-black" />
+                 <ShieldCheck className="w-2.5 h-2.5 text-background" />
                </div>
             </div>
             <div className="overflow-hidden">
-              <p className="text-[10px] font-bold text-white uppercase tracking-wider truncate">{user?.name || 'Administrator'}</p>
-              <p className="text-[9px] text-white/30 truncate uppercase tracking-widest">{user?.email || 'System Management'}</p>
+              <p className="text-[10px] font-bold text-foreground uppercase tracking-wider truncate">{user?.name || 'Administrator'}</p>
+              <p className="text-[9px] text-foreground/30 truncate uppercase tracking-widest">{user?.email || 'System Management'}</p>
             </div>
           </div>
           <button 
             onClick={logout}
-            className="w-full flex items-center justify-center gap-3 py-4 text-[9px] font-black uppercase tracking-[0.4em] border border-white/5 hover:border-red-500/30 hover:bg-red-500/5 hover:text-red-400 transition-all duration-500 group"
+            className="w-full flex items-center justify-center gap-3 py-4 text-[9px] font-black uppercase tracking-[0.4em] border border-foreground/5 hover:border-red-500/30 hover:bg-red-500/5 hover:text-red-400 transition-all duration-500 group"
           >
             <LogOut className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
             Exit Admin Session
@@ -125,9 +135,9 @@ const AdminLayout = () => {
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/10 to-transparent" />
 
         {/* Workspace Utility Bar */}
-        <header className="h-24 border-b border-white/5 px-12 flex items-center justify-between bg-background/40 backdrop-blur-md relative z-10">
+        <header className="h-20 border-b border-foreground/5 px-10 flex items-center justify-between bg-background/40 backdrop-blur-md relative z-10">
           <div className="flex items-center gap-8">
-             <div className="flex items-center gap-4 text-white/30 group cursor-pointer hover:text-white transition-colors duration-500">
+             <div className="flex items-center gap-4 text-foreground/30 group cursor-pointer hover:text-foreground transition-colors duration-500">
                <Search className="w-4 h-4" />
                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Command Center</span>
              </div>
@@ -142,7 +152,10 @@ const AdminLayout = () => {
               <div className="w-2 h-2 bg-accent animate-pulse shadow-[0_0_10px_rgba(229,142,88,0.5)]" />
             </div>
             <div className="w-px h-8 bg-white/5" />
-            <div className="relative cursor-pointer hover:opacity-80 transition-opacity">
+            <div 
+              onClick={() => navigate('/admin/messages')}
+              className="relative cursor-pointer hover:opacity-80 transition-opacity"
+            >
               <Bell className="w-5 h-5 text-white/40" />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500" />

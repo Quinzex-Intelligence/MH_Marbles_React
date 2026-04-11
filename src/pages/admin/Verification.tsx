@@ -121,13 +121,14 @@ const Verification = () => {
            style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
 
       {/* BRAND BADGE (top-left) */}
-      <div className="absolute top-10 left-12 z-50 flex items-center gap-4">
-        <div className="w-12 h-12 bg-white flex items-center justify-center rotate-45 shadow-[0_0_50px_rgba(229,142,88,0.3)]">
-          <span className="text-black text-xl font-serif font-black -rotate-45">M</span>
-        </div>
-        <div>
-          <span className="text-white font-black text-xs tracking-[0.5em] uppercase block">MH Marble</span>
-          <span className="text-accent text-[8px] font-bold tracking-[0.3em] uppercase opacity-80">Visionary Portal</span>
+      <div className="absolute top-10 left-12 z-50 flex flex-col items-center group">
+        <img 
+          src="/Logo1.png" 
+          alt="MH Marbles" 
+          className="w-16 h-16 object-contain logo-visibility group-hover:scale-110 transition-transform duration-700"
+        />
+        <div className="mt-2 text-center">
+          <span className="text-white font-black text-[9px] tracking-[0.6em] uppercase block opacity-40">Visionary Portal</span>
         </div>
       </div>
 

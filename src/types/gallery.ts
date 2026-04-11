@@ -1,39 +1,56 @@
 export interface Brand {
-  id: string;
+  id: string | number;
   name: string;
-  description: string;
-  image: string;
+  logo?: string;
+  image?: string;
+  image_url?: string;
+  description?: string;
 }
 
 export interface Collection {
-  id: string;
-  title: string;
+  id: string | number;
+  name: string;
   description: string;
-  image: string;
+  cover_image: string;
 }
 
 export interface MediaEntry {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-  published: boolean;
+  id: string | number;
+  heading: string;
+  subtext: string;
+  image: string;
+  cta_text: string;
+  cta_link: string;
+  order: number;
 }
 
 export interface JournalEntry {
-  id: string;
+  id: string | number;
   title: string;
-  description?: string; // Optional if not used everywhere
-  excerpt: string;
-  date: string;
+  description: string;
+  ytUrl?: string;
+  instant?: string;
 }
 
-export interface Message {
-  id: string;
+export interface ContactInquiry {
+  id: string | number;
   name: string;
   email: string;
-  subject: string;
+  phone: string;
   message: string;
-  date: string;
-  read: boolean;
+  is_read?: boolean;
+  created_at?: string;
 }
+
+export interface HeroSlide {
+  id: number;
+  image: string;
+  heading: string;
+  subtext: string;
+  cta_text: string;
+  cta_link: string;
+  is_active: boolean;
+  order: number;
+}
+
+export type Message = ContactInquiry;

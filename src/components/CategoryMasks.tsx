@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { cn } from '@/lib/utils';
-import { categories, initialTiles } from '@/data/tiles';
+import { cn, getOptimizedImageUrl } from '@/lib/utils';
+import { useGallery } from '@/contexts/GalleryContext';
+import { categories as staticCategories, initialTiles } from '@/data/tiles';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,6 +16,19 @@ const getCategoryImage = (categoryId: string): string => {
 export function CategoryMasks() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { categories: backendCategories } = useGallery();
+
+  const dynamicCategories = useMemo(() => {
+    return staticCategories.map(cat => {
+      const match = backendCategories.find(bc => bc.name.toLowerCase() === cat.name.toLowerCase());
+      return {
+        ...cat,
+        id: cat.id,
+        name: cat.name,
+        image_url: match?.image_url || getCategoryImage(cat.id)
+      };
+    });
+  }, [backendCategories]);
   
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -34,20 +48,18 @@ export function CategoryMasks() {
         if (!containerRef.current) return;
 
         // One massive master timeline pinned for all categories
-        const totalDuration = categories.length; // generic time units
-        
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: containerRef.current,
                 start: "top top",
-                end: `+=${categories.length * 250}%`, // 250vh per category for much smoother scroll pacing
+                end: `+=${dynamicCategories.length * 250}%`, // 250vh per category for much smoother scroll pacing
                 scrub: 1,
                 pin: true,
             }
         });
 
         // Initialize layers: Only the first layer is visible. 
-        categories.forEach((_, i) => {
+        dynamicCategories.forEach((_, i) => {
             const currentSection = sectionRefs.current[i];
             gsap.set(currentSection, { 
                 scale: 1, // Fix: Must remain 1 so crossfades work correctly
@@ -59,7 +71,7 @@ export function CategoryMasks() {
             gsap.set(imageRefs.current[i], { scale: 1 });
         });
 
-        categories.forEach((cat, i) => {
+        dynamicCategories.forEach((cat, i) => {
             const currentMask = textRefs.current[i];
             const currentImg = imageRefs.current[i];
             const nextSection = sectionRefs.current[i + 1];
@@ -74,10 +86,7 @@ export function CategoryMasks() {
             // Pan the current image so it feels alive
             tl.to(currentImg, { scale: 1.15, duration: 0.8, ease: "none" }, st);
 
-            // Phase B: Pause on Naked Texture (t=0.5 to 0.7)
-
             // Phase C: If there is a next category, smoothly fade it in Over the current.
-            // Using .to() instead of .fromTo() guarantees perfect reverse scroll scrub behavior!
             if (nextSection) {
                 tl.to(nextSection, { opacity: 1, ease: "power1.inOut", duration: 0.3 }, st + 0.7);
             }
@@ -87,46 +96,42 @@ export function CategoryMasks() {
         if (fadeOverlayRef.current) {
             tl.to(fadeOverlayRef.current, 
                 { opacity: 1, duration: 0.2, ease: "power2.inOut" }, 
-                (categories.length - 1) * 1.0 + 0.8 
+                (dynamicCategories.length - 1) * 1.0 + 0.8 
             );
         }
 
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [dynamicCategories]);
 
   return (
     <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-background">
         
-        {categories.map((category, index) => (
+        {dynamicCategories.map((category, index) => (
             <div 
                 key={category.id} 
                 ref={el => sectionRefs.current[index] = el}
-                className="absolute inset-0 w-full h-full will-change-transform"
+                className="absolute inset-0 w-full h-full"
             >
                 
                 {/* The Category Image */}
                 <img 
                     ref={el => imageRefs.current[index] = el}
-                    src={getCategoryImage(category.id)} 
+                    src={getOptimizedImageUrl(category.image_url, 1000, 1200)} 
                     alt={category.name} 
-                    className="absolute inset-0 z-0 w-full h-full object-cover filter contrast-[1.1] saturate-[1.2] will-change-transform" 
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 z-0 w-full h-full object-cover filter contrast-[1.1] saturate-[1.2]" 
                 />
 
                 {/* The Typographic Mask (Theme-aware Blend) */}
                 <div 
                     ref={el => textRefs.current[index] = el}
-                    className={cn(
-                        "absolute inset-0 z-10 w-full h-full flex flex-col items-center justify-center pointer-events-none will-change-transform",
-                        isLight ? "bg-background mix-blend-screen" : "bg-black mix-blend-multiply"
-                    )}
+                    className="absolute inset-0 z-10 w-full h-full flex flex-col items-center justify-center pointer-events-none bg-background dark:mix-blend-multiply mix-blend-screen"
                 >
                     <h2 
-                        className={cn(
-                            "font-serif font-black tracking-[-0.04em] leading-none text-center uppercase whitespace-nowrap",
-                            isLight ? "text-black" : "text-white"
-                        )}
+                        className="font-serif font-black tracking-[-0.04em] leading-none text-center uppercase whitespace-nowrap text-foreground"
                         style={{ fontSize: 'min(18vw, 25vh)', margin: 0, padding: 0 }}
                     >
                         {category.name}

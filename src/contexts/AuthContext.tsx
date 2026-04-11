@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '@/lib/api';
+import { springApi } from '@/lib/api';
 
 interface UserInfo {
   name: string;
@@ -27,13 +27,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await api.get('/api/spring/owner/info');
+        // Essential: Refresh the session immediately on load to convert any 
+        // valid refresh token into a fresh access token before making info calls.
+        try {
+          await springApi.post('/auth/refresh');
+        } catch (e) {
+          // If refresh fails on load, it's fine (user might not be logged in)
+          console.log("No refresh token found on startup.");
+        }
+
+        const res = await springApi.get('/api/spring/owner/info');
         if (res.data) {
           setUserInfo(res.data);
           setIsLoggedIn(true);
         }
       } catch (error) {
-        // Not logged in or session expired
         console.log("No active session detected.");
       } finally {
         setLoading(false);
@@ -46,11 +54,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (credential: string) => {
     setLoading(true);
     try {
-      // 1. Send Google credential to backend to establish session cookies
-      await api.post('/auth/google', { token: credential });
+      // 1. Send Google credential to backend (Spring Boot) to establish session cookies
+      await springApi.post('/auth/google', { token: credential });
 
       // 2. Fetch user information from the newly established session
-      const res = await api.get('/api/spring/owner/info');
+      const res = await springApi.get('/api/spring/owner/info');
       
       setUserInfo(res.data);
       setIsLoggedIn(true);
@@ -65,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     setLoading(true);
     try {
-      await api.post('/auth/logout');
+      await springApi.post('/auth/logout');
     } catch (e) {
       console.error("Logout error (likely already logged out):", e);
     } finally {

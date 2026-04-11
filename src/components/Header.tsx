@@ -46,25 +46,36 @@ export function Header() {
       >
         <div className="w-full max-w-none px-6 md:px-[4%]">
           <div className="flex items-center justify-between">
-            {/* Logo - Architectural Refinement */}
-            <a href="/" className="group flex flex-col items-center">
-              <span className="text-xl md:text-2xl font-serif tracking-[0.4em] uppercase leading-tight transition-colors duration-700 text-foreground group-hover:text-accent">
-                MH MARBLES
-              </span>
-              <span className="text-[8px] font-sans font-black tracking-[0.8em] uppercase text-accent/60 mt-1">
-                Visionary Gallery
-              </span>
-            </a>
+            <Link to="/" className="group flex items-center gap-2 md:gap-3 shrink-0">
+              <img 
+                src="/Logo1.png" 
+                alt="MH Marbles" 
+                className={cn(
+                  "h-8 md:h-10 w-auto object-contain transition-all duration-700 group-hover:scale-105 logo-visibility"
+                )}
+              />
+              <div className="flex flex-col">
+                <span className={cn(
+                  "text-base md:text-xl font-serif tracking-[0.2em] md:tracking-[0.3em] uppercase leading-tight transition-colors duration-700 group-hover:text-accent",
+                  isScrolled ? "text-foreground" : "text-foreground"
+                )}>
+                  MH MARBLES
+                </span>
+                <span className="text-[6px] md:text-[7px] font-sans font-black tracking-[0.4em] md:tracking-[0.6em] uppercase text-accent/60">
+                  Visionary Gallery
+                </span>
+              </div>
+            </Link>
 
             {/* Desktop Navigation - Subtle Gold Underline */}
-            <nav className="hidden lg:flex items-center gap-12">
+            <nav className="hidden xl:flex items-center gap-8 2xl:gap-12">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
                   className={cn(
                     "text-[11px] font-sans font-black uppercase tracking-[0.4em] transition-all duration-500 relative py-2 group whitespace-nowrap",
-                    isScrolled ? "text-foreground/80 hover:text-foreground" : "text-white/70 hover:text-white"
+                    isScrolled ? "text-foreground/80 hover:text-foreground" : "text-foreground/70 hover:text-foreground"
                   )}
                 >
                   {link.label}
@@ -74,7 +85,7 @@ export function Header() {
             </nav>
 
             {/* Desktop CTA - Luxury Gold Button */}
-            <div className="hidden lg:flex items-center gap-8 border-l pl-8 border-border transition-colors duration-700">
+            <div className="hidden xl:flex items-center gap-8 border-l pl-8 border-border transition-colors duration-700">
               {/* Theme Toggle */}
               <button
                 onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
@@ -86,7 +97,7 @@ export function Header() {
 
               <Button
                 variant="outline"
-                className="text-[10px] font-sans font-black uppercase tracking-[0.5em] transition-all duration-700 h-10 px-8 rounded-none border-[#C8A96E]/30 text-[#C8A96E] hover:bg-[#C8A96E] hover:text-black shadow-gold bg-white/[0.02] backdrop-blur-md"
+                className="text-[10px] font-sans font-black uppercase tracking-[0.5em] transition-all duration-700 h-10 px-8 rounded-none border-accent/30 text-accent hover:bg-accent hover:text-background shadow-gold bg-foreground/[0.02] backdrop-blur-md"
                 asChild
               >
                 <a href="#contact">ENQUIRE</a>
@@ -96,7 +107,7 @@ export function Header() {
             {/* Mobile Menu Toggle - Refined typography */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 transition-colors duration-700 text-foreground flex items-center gap-4 relative z-[60]"
+              className="xl:hidden p-2 transition-colors duration-700 text-foreground flex items-center gap-4 relative z-[60]"
               aria-label="Toggle menu"
             >
               <span className="text-[8px] font-black uppercase tracking-[0.6em] text-foreground/40">{isMobileMenuOpen ? 'CLOSE' : 'MENU'}</span>
@@ -118,7 +129,7 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ type: 'tween', ease: [0.76, 0, 0.24, 1], duration: 0.8 }}
-            className="fixed inset-0 z-40 lg:hidden bg-background"
+            className="fixed inset-0 z-40 xl:hidden bg-background"
           >
             <div className="flex flex-col h-full pt-32 pb-12 px-8">
                <div className="flex justify-between items-center mb-16 border-b border-border pb-8">

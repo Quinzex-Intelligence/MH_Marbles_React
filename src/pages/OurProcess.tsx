@@ -116,7 +116,7 @@ const OurProcess = () => {
             <PageLayout title="The Blueprint." subtitle="Algorithmic Craft">
                 
                 {/* Immersive Blueprint Environment */}
-                <div className="bg-[#050403] relative border-t border-white/5 pb-64 overflow-hidden pt-32" ref={containerRef}>
+                <div className="bg-[#050403] relative border-t border-foreground/5 pb-64 overflow-hidden pt-32" ref={containerRef}>
                     
                     {/* Grid Background pattern (Blueprint vibe) */}
                     <div className="absolute inset-0 z-0 mix-blend-screen opacity-10"
@@ -127,7 +127,7 @@ const OurProcess = () => {
                     />
 
                     {/* The Central Animated Line */}
-                    <div className="absolute left-[8%] md:left-1/2 top-40 bottom-0 w-[1px] bg-white/10 z-10 -translate-x-1/2">
+                    <div className="absolute left-[8%] md:left-1/2 top-40 bottom-0 w-[1px] bg-foreground/10 z-10 -translate-x-1/2">
                         <div 
                             ref={lineRef}
                             className="w-full h-full bg-[#C8A96E] shadow-[0_0_15px_#C8A96E]" 
@@ -142,11 +142,11 @@ const OurProcess = () => {
                             <span className="text-[10px] md:text-xs font-mono font-black tracking-[0.5em] text-[#C8A96E] uppercase mb-6 block">
                                 SEQUENCE_INIT
                             </span>
-                            <h2 className="text-4xl md:text-7xl font-serif font-light text-white tracking-tighter mix-blend-difference mb-8">
+                            <h2 className="text-4xl md:text-7xl font-serif font-light text-foreground tracking-tighter mix-blend-difference mb-8">
                                 Eradicating Error.<br/>
-                                <span className="italic text-white/40">Elevating Form.</span>
+                                <span className="italic text-foreground/40">Elevating Form.</span>
                             </h2>
-                            <p className="font-mono text-[10px] md:text-xs text-white/30 uppercase tracking-[0.2em] max-w-xl md:mx-auto">
+                            <p className="font-mono text-[10px] md:text-xs text-foreground/30 uppercase tracking-[0.2em] max-w-xl md:mx-auto">
                                 We replace physical guesswork with digital absolute certainty. Below is the operational sequence of the MH Vision atelier.
                             </p>
                         </div>
@@ -166,27 +166,27 @@ const OurProcess = () => {
                                         <div className={`w-full md:w-[45%] pl-12 md:pl-0 ${isEven ? 'md:pr-16 text-left' : 'md:pl-16 md:text-left'}`}>
                                             
                                             {/* Phase Number */}
-                                            <div className="bp-number font-mono text-8xl md:text-[10rem] font-light text-white/5 tracking-tighter leading-none mb-[-40px] md:mb-[-60px] select-none">
+                                            <div className="bp-number font-mono text-8xl md:text-[10rem] font-light text-foreground/5 tracking-tighter leading-none mb-[-40px] md:mb-[-60px] select-none">
                                                 {step.phase}
                                             </div>
 
                                             {/* Data Box */}
-                                            <div className="bp-content bg-[#0C0A08] border border-white/10 p-8 md:p-12 relative backdrop-blur-md">
+                                            <div className="bp-content bg-background border border-foreground/10 p-8 md:p-12 relative backdrop-blur-md">
                                                 <div className="absolute top-0 left-0 w-4 h-[1px] bg-[#C8A96E]" />
                                                 <div className="absolute top-0 left-0 w-[1px] h-4 bg-[#C8A96E]" />
                                                 
-                                                <h3 className="text-3xl md:text-4xl font-serif text-white mb-6">
+                                                <h3 className="text-3xl md:text-4xl font-serif text-foreground mb-6">
                                                     {step.title}
                                                 </h3>
-                                                <p className="text-sm font-sans font-light text-white/50 leading-relaxed mb-10">
+                                                <p className="text-sm font-sans font-light text-foreground/50 leading-relaxed mb-10">
                                                     {step.desc}
                                                 </p>
 
                                                 {/* Grid Data Parameters */}
-                                                <div className="bp-data grid grid-cols-2 lg:grid-cols-3 gap-6 pt-6 border-t border-white/5">
+                                                <div className="bp-data grid grid-cols-2 lg:grid-cols-3 gap-6 pt-6 border-t border-foreground/5">
                                                     {step.data.map((d, i) => (
                                                         <div key={i} className="flex flex-col space-y-2">
-                                                            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-white/30">{d.label}</span>
+                                                            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-foreground/30">{d.label}</span>
                                                             <span className="font-mono text-[11px] text-[#C8A96E]">{d.val}</span>
                                                         </div>
                                                     ))}

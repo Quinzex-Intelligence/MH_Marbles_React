@@ -1,31 +1,40 @@
 export interface Tile {
-  id: string;
+  id: string | number;
   name: string;
-  category: 'marble' | 'granite' | 'vitrified' | 'wooden';
-  brand: string; // New field for provenance
-  size: string;  // New field for dimensions
-  fill: string; // fallback color for rendering
+  category?: 'marble' | 'granite' | 'vitrified' | 'wooden' | string | number;
+  brand: string; // Map from company in backend
+  size: string;  
+  fill?: string; // fallback color for rendering
   finish: string;
-  finishes: string[]; // Options
-  thickness: string;
-  description: string;
-  origin: string;
+  finishes?: string[]; // Options
+  thickness?: string;
+  description?: string;
+  origin?: string;
   color: string;
-  usage: string[];
+  usage?: string[];
   price?: string;
-  textureColor: string; 
-  roughness: number;
-  metalness: number;
+  sku?: string;
+  textureColor?: string; 
+  roughness?: number;
+  metalness?: number;
   image?: string; 
-  space?: string; // e.g., 'Kitchen', 'Bathroom', 'Living Room', 'Outdoor'
+  image_url?: string; // Correct S3 URL from backend
+  image_key?: string; // S3 storage key
+  company?: number;   // Raw ID from backend
+  category_name?: string;
+  space?: string; 
 }
 
 export interface SanitaryItem {
-  id: string;
+  id: string | number;
   name: string;
   description: string;
   image: string;
   price?: string;
+  image_url?: string;
+  image_key?: string;
+  category?: number | null;
+  created_at?: string;
 }
 
 export const initialTiles: Tile[] = [
@@ -43,7 +52,7 @@ export const initialTiles: Tile[] = [
     metalness: 0.1,
     brand: 'Italian Heritage',
     size: '1200x2400 mm',
-    image: '/calacatta-gold.png',
+    image: 'https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?auto=format&fit=crop&q=80&w=2000',
     space: 'Living Room',
     fill: '#f5f3ef',
     finishes: ['Polished', 'Honed'],
@@ -64,7 +73,7 @@ export const initialTiles: Tile[] = [
     metalness: 0.15,
     brand: 'Carrara Elite',
     size: '1200x2400 mm',
-    image: '/carrara_luxury_texture_1769248332961.png',
+    image: 'https://images.unsplash.com/photo-1620626011761-9963d7b69a9a?auto=format&fit=crop&q=80&w=2000',
     space: 'Commercial',
     fill: '#fafafa',
     finishes: ['Polished'],
@@ -85,7 +94,7 @@ export const initialTiles: Tile[] = [
     metalness: 0.05,
     brand: 'Levantina',
     size: '800x1600 mm',
-    image: '/travertine_roman_texture_1769248381252.png',
+    image: 'https://images.unsplash.com/photo-1590212151175-e58edd96d8f5?auto=format&fit=crop&q=80&w=2000',
     space: 'Living Room',
     fill: '#4a3728',
     finishes: ['Honed', 'Polished'],
@@ -106,7 +115,7 @@ export const initialTiles: Tile[] = [
     metalness: 0.2,
     brand: 'Marquina Premium',
     size: '800x1600 mm',
-    image: '/nero-marquina.png',
+    image: 'https://images.unsplash.com/photo-1600607688066-890987f18a86?auto=format&fit=crop&q=80&w=2000',
     space: 'Bathroom',
     fill: '#1a1a1a',
     finishes: ['Polished', 'Leather'],
@@ -128,7 +137,7 @@ export const initialTiles: Tile[] = [
     metalness: 0.3,
     brand: 'Galaxy Stone',
     size: '600x1200 mm',
-    image: '/onyx_translucent_texture_dark_1769248364215.png',
+    image: 'https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&q=80&w=2000',
     space: 'Kitchen',
     fill: '#0d0d0d',
     finishes: ['Polished', 'Flamed'],
@@ -188,7 +197,7 @@ export const initialTiles: Tile[] = [
     metalness: 0.4,
     brand: 'Arctic Series',
     size: '600x1200 mm',
-    image: '/uploaded_media_1769248031660.png',
+    image: 'https://images.unsplash.com/photo-1516633630673-67bbad747022?auto=format&fit=crop&q=80&w=2000',
     fill: '#ffffff',
     finishes: ['Glossy', 'Matte'],
     thickness: '10',

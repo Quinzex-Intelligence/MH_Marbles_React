@@ -43,23 +43,10 @@ export function WhyUs() {
   const { brands } = useGallery();
   const sectionRef = useRef<HTMLElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-        // Deep background parallax
-        gsap.to(bgRef.current, {
-            yPercent: 15,
-            ease: "none",
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: true
-            }
-        });
-
-        // Stats strip reveal
+        // Stats strip reveal (fires once, no scrub)
         if (statsRef.current) {
             gsap.from(statsRef.current.children, {
                 y: 40,
@@ -124,9 +111,8 @@ export function WhyUs() {
       
       {/* ── PART 1: Stats strip ── */}
       <div className="relative border-y border-border py-12 md:py-16 overflow-hidden">
-        <div 
-          ref={bgRef}
-          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-[0.04] scale-110 origin-bottom"
+        <div
+          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=60&w=1000')] bg-cover bg-center opacity-[0.04] scale-110 origin-bottom"
         />
         <div ref={statsRef} className="relative z-10 w-full px-4 md:px-[8%] grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 divide-x-0 md:divide-x md:divide-border">
           {STATS.map((s, i) => (

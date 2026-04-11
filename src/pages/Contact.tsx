@@ -40,40 +40,30 @@ const ContactPage = () => {
         setErrorMessage('');
         
         try {
-            // Local Store update for immediate visibility in Admin Panel
-            addMessage({
-                id: Date.now().toString(),
+            // Backend Integration via GalleryContext (Django)
+            await addMessage({
                 name: formData.name,
                 email: formData.email,
-                subject: formData.inquiryType,
-                message: formData.message,
-                read: false,
-                date: new Date().toISOString().split('T')[0]
+                phone: formData.phone,
+                message: `${formData.inquiryType}: ${formData.message}`,
             });
 
-            // Backend Integration
-            const response = await fetch('http://localhost:8080/auth/contact/us', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-            
-            if (response.ok) {
-                setStatus('success');
-                toast.success("Inquiry Sent Successfully");
-                setFormData({ name: '', email: '', phone: '', inquiryType: 'Project Consultation', message: '' });
-            } else {
-                // We still mark as success because the local store captured it, 
-                // but we inform the user of the minor backend sync delay.
-                setStatus('success');
-                console.warn('Backend sync delayed, but inquiry captured locally.');
-            }
-        } catch (error) {
-            // Failure only if even local capture fails (unlikely)
+            setStatus('success');
+            toast.success("Inquiry Sent Successfully");
+            setFormData({ name: '', email: '', phone: '', inquiryType: 'Project Consultation', message: '' });
+        } catch (error: unknown) {
+            console.error('Submission error:', error);
             setStatus('error');
-            setErrorMessage('We encountered an issue submitting your request. Please try contacting us directly.');
+            
+            // Extract error message from Django response if available
+            const axiosError = error as { response?: { data?: Record<string, string[]> } };
+            const backendError = axiosError.response?.data;
+            if (backendError) {
+                const firstError = Object.values(backendError)[0];
+                setErrorMessage(Array.isArray(firstError) ? firstError[0] : "Validation error occurred.");
+            } else {
+                setErrorMessage('We encountered an issue submitting your request. Please try contacting us directly.');
+            }
         }
     };
 

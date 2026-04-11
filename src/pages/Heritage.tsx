@@ -107,7 +107,7 @@ const HeritagePage = () => {
             <PageLayout title="The Legacy." subtitle="Four Decades">
                 
                 {/* Immersive Deep Z-Index Container */}
-                <div ref={containerRef} className="relative w-full bg-[#0C0A08] text-white overflow-hidden min-h-screen border-t border-white/5 pb-64">
+                <div ref={containerRef} className="relative w-full bg-background text-foreground overflow-hidden min-h-screen border-t border-foreground/5 pb-64">
                     
                     {/* Deep Slow-Scrubbing Background */}
                     <div className="absolute inset-0 z-0 opacity-20 sepia-[0.5] mix-blend-screen overflow-hidden pointer-events-none">
@@ -117,7 +117,7 @@ const HeritagePage = () => {
                             alt="Quarry Legacy" 
                             className="w-full h-[150%] object-cover transform-gpu origin-top"
                         />
-                        <div className="absolute inset-0 bg-[#0C0A08]/80" />
+                        <div className="absolute inset-0 bg-background/80" />
                     </div>
                     
                     <div className="relative z-10 w-full pt-32 max-w-none">
@@ -127,9 +127,9 @@ const HeritagePage = () => {
                             <span className="text-[10px] md:text-xs font-sans font-black tracking-[1em] text-[#C8A96E] uppercase mb-8 block">Origins</span>
                             <h2 className="text-5xl md:text-7xl font-serif font-light leading-[0.9] tracking-tighter mb-10">
                                 Born in the <br/>
-                                <span className="italic text-white/50">Apuan Alps.</span>
+                                <span className="italic text-foreground/50">Apuan Alps.</span>
                             </h2>
-                            <p className="text-xl md:text-2xl font-light text-white/60 leading-relaxed font-sans">
+                            <p className="text-xl md:text-2xl font-light text-foreground/60 leading-relaxed font-sans">
                                 Our legacy was carved by hand before it was ever touched by robotics. Over 40 years of relentless pursuit of architectural perfection.
                             </p>
                         </div>
@@ -143,7 +143,7 @@ const HeritagePage = () => {
                                     <div key={item.year} className={`heritage-item relative w-full flex ${isEven ? 'justify-start' : 'justify-end'} items-center`}>
                                         
                                         {/* Massive Year Text (Deep Parallax) - Breaks bounds intentionally */}
-                                        <div className={`heritage-year absolute top-0 ${isEven ? '-left-[10vw]' : '-right-[10vw]'} text-[35vw] font-serif font-bold italic text-white leading-none z-0 select-none overflow-hidden max-w-[120vw] whitespace-nowrap`}>
+                                        <div className={`heritage-year absolute top-0 ${isEven ? '-left-[10vw]' : '-right-[10vw]'} text-[35vw] font-serif font-bold italic text-foreground leading-none z-0 select-none overflow-hidden max-w-[120vw] whitespace-nowrap`}>
                                             {item.year}
                                         </div>
 
@@ -151,22 +151,22 @@ const HeritagePage = () => {
                                         <div className={`heritage-content relative z-10 flex flex-col md:flex-row gap-12 w-[90%] md:w-[70%] lg:w-[60%] ${isEven ? 'ml-6 md:ml-[8%]' : 'mr-6 md:mr-[8%] flex-row-reverse'}`}>
                                             
                                             {/* Text Block */}
-                                            <div className="flex-1 bg-black/40 backdrop-blur-md p-10 md:p-16 border border-white/10 relative">
+                                            <div className="flex-1 bg-background/40 backdrop-blur-md p-10 md:p-16 border border-foreground/10 relative">
                                                 {/* Corner Accents */}
                                                 <div className={`absolute top-0 ${isEven ? 'left-0' : 'right-0'} w-8 h-[1px] bg-[#C8A96E]`} />
                                                 <div className={`absolute top-0 ${isEven ? 'left-0' : 'right-0'} w-[1px] h-8 bg-[#C8A96E]`} />
 
-                                                <h3 className="text-4xl md:text-6xl font-serif font-light text-white mb-8 leading-[0.9]">
+                                                <h3 className="text-4xl md:text-6xl font-serif font-light text-foreground mb-8 leading-[0.9]">
                                                     {item.title}
                                                 </h3>
-                                                <div className="w-12 h-[1px] bg-white/20 mb-8" />
-                                                <p className="text-base md:text-lg font-sans font-light text-white/60 leading-relaxed">
+                                                <div className="w-12 h-[1px] bg-foreground/20 mb-8" />
+                                                <p className="text-base md:text-lg font-sans font-light text-foreground/60 leading-relaxed">
                                                     {item.desc}
                                                 </p>
                                             </div>
 
                                             {/* Supporting Image Array */}
-                                            <div className="flex-1 hidden md:block aspect-[4/5] relative overflow-hidden ring-1 ring-white/10">
+                                            <div className="flex-1 hidden md:block aspect-[4/5] relative overflow-hidden ring-1 ring-foreground/10">
                                                 <img 
                                                     src={item.img} 
                                                     alt={item.title} 
@@ -182,9 +182,9 @@ const HeritagePage = () => {
                     </div>
 
                     {/* Footer Cap */}
-                    <div className="relative z-10 text-center mt-64 border-t border-white/10 pt-32 w-full max-w-3xl mx-auto">
+                    <div className="relative z-10 text-center mt-64 border-t border-foreground/10 pt-32 w-full max-w-3xl mx-auto">
                         <h4 className="text-4xl font-serif font-light italic text-[#C8A96E] mb-6">"The stone remains. Only the methods evolve."</h4>
-                        <span className="text-[9px] font-sans font-black uppercase tracking-[0.5em] text-white/50 block">M.H. — Founder, 1984</span>
+                        <span className="text-[9px] font-sans font-black uppercase tracking-[0.5em] text-foreground/50 block">M.H. — Founder, 1984</span>
                     </div>
 
                 </div>

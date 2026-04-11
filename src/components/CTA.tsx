@@ -72,15 +72,15 @@ export function CTA() {
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
       
       {/* ── Geometric Lines ───────────────────────────────── */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-[#0C0A08]/10" />
-      <div className="absolute bottom-0 left-0 w-full h-[1px] bg-[#0C0A08]/10" />
-      <div className="absolute top-0 left-[8%] w-[1px] h-full bg-[#0C0A08]/10" />
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-background/10" />
+      <div className="absolute bottom-0 left-0 w-full h-[1px] bg-background/10" />
+      <div className="absolute top-0 left-[8%] w-[1px] h-full bg-background/10" />
 
       <div className="relative z-10 px-6 md:px-[12%] max-w-7xl mx-auto">
         
         {/* Top Header */}
         <div ref={headerRef} className="flex items-center gap-4 mb-20">
-          <div className="w-12 h-[2px] bg-[#0C0A08]" />
+          <div className="w-12 h-[2px] bg-background" />
           <span className="text-[10px] font-black font-sans tracking-[0.6em] uppercase text-[#0C0A08]">
             Final Ascent
           </span>

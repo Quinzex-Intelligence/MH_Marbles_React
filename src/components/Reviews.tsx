@@ -44,7 +44,7 @@ export function Reviews() {
           start: 'top top',
           end: `+=${totalScrollWidth}`, // scroll duration depends on width
           pin: true,
-          scrub: 1, // smooth scrub
+          scrub: true, // pure scroll-locked scrub (no interpolation lag)
           anticipatePin: 1,
         }
       });
@@ -97,7 +97,7 @@ export function Reviews() {
       <div className="relative z-20 flex-1 flex items-center overflow-hidden w-full">
         <div 
           ref={scrollContainerRef}
-          className="flex gap-8 md:gap-16 px-6 md:px-[8%] w-max pr-[20vw]" // extra padding at end to scroll past
+          className="flex gap-8 md:gap-16 px-6 md:px-[8%] w-max pr-[20vw] will-change-transform" // Hardware accelerate the track
         >
           {journal.map((entry, index) => (
             <div 
@@ -122,10 +122,20 @@ export function Reviews() {
                 </div>
 
                 {/* Middle: Quote */}
-                <div className="flex-1 flex items-center">
+                <div className="flex-1 flex flex-col justify-center gap-6">
                   <p className="font-serif text-2xl md:text-3xl lg:text-4xl font-light italic text-foreground/60 leading-relaxed group-hover:text-foreground transition-colors duration-700">
-                    "{entry.excerpt}"
+                    "{entry.description}"
                   </p>
+                  {entry.ytUrl && (
+                    <a 
+                      href={entry.ytUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="inline-flex items-center gap-2 text-accent text-[10px] uppercase tracking-widest font-black hover:text-foreground transition-colors w-max"
+                    >
+                      <span>▶</span> Watch Video
+                    </a>
+                  )}
                 </div>
 
                 {/* Bottom: Client info & divider */}
@@ -139,7 +149,7 @@ export function Reviews() {
                        </span>
                      </div>
                      <span className="text-[8px] font-bold uppercase tracking-[0.4em] text-accent/40">
-                       {entry.date}
+                       {entry.instant ? new Date(entry.instant).toLocaleDateString() : 'Unknown Date'}
                      </span>
                   </div>
                 </div>
@@ -157,7 +167,7 @@ export function Reviews() {
               className="group flex flex-col items-center justify-center gap-6 p-12 border border-border hover:border-accent/30 bg-foreground/[0.01] hover:bg-foreground/[0.03] transition-all duration-700 cursor-pointer h-full w-full"
             >
               <div className="w-16 h-16 rounded-full border border-accent/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-accent transition-all duration-700">
-                 <span className="text-accent group-hover:text-white">↗</span>
+                 <span className="text-accent group-hover:text-foreground">↗</span>
               </div>
               <span className="text-[10px] font-black font-sans uppercase tracking-[0.5em] text-foreground/40 group-hover:text-foreground text-center leading-loose">
                 Discover All<br/>Testimonials
