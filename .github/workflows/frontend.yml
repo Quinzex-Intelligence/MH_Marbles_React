@@ -70,7 +70,7 @@ jobs:
       - name: Deploy to EC2 via SSM
         run: |
           aws ssm send-command \
-            --targets "Key=tag:Name,Values=${EC2_TAG_NAME}" \
+            --targets Key=tag:Name,Values="${EC2_TAG_NAME}" \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy frontend via GitHub release" \
             --parameters 'commands=[
