@@ -61,7 +61,7 @@ api.interceptors.response.use(
 
       try {
         // Authenticated sessions are managed by Spring Boot
-        await axios.post(`${SPRING_URL}/auth/refresh`, {}, { withCredentials: true });
+        await axios.post(`${SPRING_URL}${SPRING_API_PREFIX}/auth/refresh`, {}, { withCredentials: true });
         processQueue(null);
         return api(originalRequest);
       } catch (refreshError) {
@@ -95,7 +95,7 @@ springApi.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await axios.post(`${SPRING_URL}/auth/refresh`, {}, { withCredentials: true });
+        await axios.post(`${SPRING_URL}${SPRING_API_PREFIX}/auth/refresh`, {}, { withCredentials: true });
         processQueue(null);
         return springApi(originalRequest);
       } catch (refreshError) {

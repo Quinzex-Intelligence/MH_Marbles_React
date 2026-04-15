@@ -2,7 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { springApi } from '@/lib/api';
 
-const SPRING_URL = import.meta.env.VITE_SPRING_API_PREFIX || 'http://localhost:8080';
+const SPRING_URL = import.meta.env.VITE_SPRING_URL || 'http://localhost:8080';
+const SPRING_API_PREFIX = import.meta.env.VITE_SPRING_API_PREFIX || '/api';
 
 interface UserInfo {
   name: string;
@@ -33,7 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Essential: Refresh the session immediately on load to convert any 
         // valid refresh token into a fresh access token before making info calls.
         try {
-          await axios.post(`${SPRING_URL}/auth/refresh`, {}, { withCredentials: true });
+          await axios.post(`${SPRING_URL}${SPRING_API_PREFIX}/auth/refresh`, {}, { withCredentials: true });
         } catch (e) {
           // If refresh fails on load, it's fine (user might not be logged in)
           console.log("No refresh token found on startup.");
@@ -58,7 +59,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     try {
 
-      await axios.post(`${SPRING_URL}/auth/google`, { token: credential }, { withCredentials: true });
+      // 1. Send Google credential to backend (Spring Boot) to establish session cookies
+      await axios.post(`${SPRING_URL}${SPRING_API_PREFIX}/auth/google`, { token: credential }, { withCredentials: true });
       const res = await springApi.get('/spring/owner/info');
       
       setUserInfo(res.data);
@@ -74,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     setLoading(true);
     try {
-      await axios.post(`${SPRING_URL}/auth/logout`, {}, { withCredentials: true });
+      await axios.post(`${SPRING_URL}${SPRING_API_PREFIX}/auth/logout`, {}, { withCredentials: true });
     } catch (e) {
       console.error("Logout error (likely already logged out):", e);
     } finally {
