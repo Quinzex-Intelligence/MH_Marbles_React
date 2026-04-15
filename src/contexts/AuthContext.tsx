@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.log("No refresh token found on startup.");
         }
 
-        const res = await springApi.get('/spring/owner/info');
+        const res = await springApi.get('/owner/info');
         if (res.data) {
           setUserInfo(res.data);
           setIsLoggedIn(true);
