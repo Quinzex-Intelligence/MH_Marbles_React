@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { springApi } from '@/lib/api';
 
-const SPRING_URL = import.meta.env.VITE_SPRING_URL || 'http://localhost:8080';
+const SPRING_URL = import.meta.env.VITE_SPRING_API_PREFIX || 'http://localhost:8080';
 
 interface UserInfo {
   name: string;
@@ -57,10 +57,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (credential: string) => {
     setLoading(true);
     try {
-      // 1. Send Google credential to backend (Spring Boot) to establish session cookies
-      await axios.post(`${SPRING_URL}/auth/google`, { token: credential }, { withCredentials: true });
 
-      // 2. Fetch user information from the newly established session
+      await axios.post(`${SPRING_URL}/auth/google`, { token: credential }, { withCredentials: true });
       const res = await springApi.get('/spring/owner/info');
       
       setUserInfo(res.data);
