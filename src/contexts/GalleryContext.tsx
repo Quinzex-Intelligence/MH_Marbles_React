@@ -46,8 +46,10 @@ interface GalleryContextType {
   deleteMedia: (id: string | number) => Promise<void>;
 
   journal: JournalEntry[];
-  addJournal: (data: { title: string; description: string; ytUrl?: string; images: File[] }) => Promise<void>;
+  addProject: (data: { title: string; description: string; images: File[] }) => Promise<void>;
+  addBlog: (data: { title: string; description: string; ytUrl: string }) => Promise<void>;
   deleteJournal: (id: string | number) => Promise<void>;
+
 
   messages: Message[];
   addMessage: (msg: Omit<Message, 'id' | 'created_at'>) => Promise<Message>;
@@ -84,7 +86,8 @@ export const GalleryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const { addMedia, updateMedia, deleteMedia } = useMediaMutations();
   const { addCollection, updateCollection, deleteCollection } = useCollectionMutations();
   const { addMessage: addMsg, deleteMessage: delMsg } = useMessageMutations();
-  const { addJournal: addJournalMutation, deleteJournal: delJournal } = useJournalMutations();
+  const { addProject, addBlog, deleteJournal: delJournal } = useJournalMutations();
+
 
   // ─── refreshAll: Invalidate everything (admin-level hard refresh) ───────────
   const refreshAll = useCallback(async () => {
@@ -156,8 +159,10 @@ export const GalleryProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     // Journal / Projects
     journal: journalData as JournalEntry[],
-    addJournal: async (data) => { await addJournalMutation.mutateAsync(data); },
+    addProject: async (data) => { await addProject.mutateAsync(data); },
+    addBlog: async (data) => { await addBlog.mutateAsync(data); },
     deleteJournal: async (id) => { await delJournal.mutateAsync(id); },
+
 
     // Messages
     messages: messagesData as Message[],

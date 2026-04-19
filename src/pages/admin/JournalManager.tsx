@@ -13,9 +13,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+
 
 const JournalManager = () => {
-  const { journal: entries, addJournal, deleteJournal } = useGallery();
+  const { journal: entries, addProject, addBlog, deleteJournal } = useGallery();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,9 +26,28 @@ const JournalManager = () => {
     ytUrl: ''
   });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [lastLockedAt, setLastLockedAt] = useState<'url' | 'images' | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Exclusivity Logic: Auto-Locking
+  const isUrlDisabled = selectedImages.length > 0;
+  const isImagesDisabled = formData.ytUrl.trim().length > 0;
+
+  // Snackbar Guidance: Trigger once when locking happens
+  React.useEffect(() => {
+    if (isUrlDisabled && lastLockedAt !== 'url') {
+      toast.info('Visual Narrative Lock: Images selected. YouTube field disabled.');
+      setLastLockedAt('url');
+    } else if (isImagesDisabled && lastLockedAt !== 'images') {
+      toast.info('Video Narrative Lock: URL entered. Image uploader disabled.');
+      setLastLockedAt('images');
+    } else if (!isUrlDisabled && !isImagesDisabled) {
+      setLastLockedAt(null);
+    }
+  }, [isUrlDisabled, isImagesDisabled, lastLockedAt]);
+
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isImagesDisabled) return; // Guard
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
       const totalPossible = 10;
@@ -51,31 +72,45 @@ const JournalManager = () => {
       return;
     }
     
-    if (selectedImages.length === 0) {
-      toast.error('Please upload at least one architectural image');
+    const hasImages = selectedImages.length > 0;
+    const hasUrl = formData.ytUrl.trim().length > 0;
+
+    if (!hasImages && !hasUrl) {
+      toast.error('Please provide either architectural images or a YouTube URL');
       return;
     }
 
     try {
       setIsSubmitting(true);
-      await addJournal({
-        title: formData.title,
-        description: formData.description,
-        ytUrl: formData.ytUrl || undefined,
-        images: selectedImages
-      });
       
-      toast.success('Narrative established successfully');
+      if (hasUrl) {
+        // Route to Blog Service
+        await addBlog({
+          title: formData.title,
+          description: formData.description,
+          ytUrl: formData.ytUrl
+        });
+      } else {
+        // Route to Project Service
+        await addProject({
+          title: formData.title,
+          description: formData.description,
+          images: selectedImages
+        });
+      }
+      
+      toast.success('Journal narrative published successfully');
       setIsDialogOpen(false);
       setFormData({ title: '', description: '', ytUrl: '' });
       setSelectedImages([]);
     } catch (error: unknown) {
-      const msg = error instanceof Error ? error.message : 'Failed to establish narrative';
+      const msg = error instanceof Error ? error.message : 'Failed to publish narrative';
       toast.error(msg);
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   const handleDelete = async (id: string | number) => {
     try {
@@ -143,16 +178,18 @@ const JournalManager = () => {
                   
                   <div className="space-y-3">
                     <Label className="text-[9px] font-black uppercase tracking-widest text-foreground/40">YouTube URL (Optional)</Label>
-                    <div className="relative">
+                    <div className={cn("relative transition-opacity duration-500", isUrlDisabled && "opacity-30 cursor-not-allowed")}>
                       <Input
                         type="url"
                         value={formData.ytUrl}
                         onChange={e => setFormData({...formData, ytUrl: e.target.value})}
-                        className="bg-foreground/5 border-foreground/10 rounded-none h-12 focus:border-accent transition-colors pl-10"
-                        placeholder="https://youtube.com/watch?v=..."
+                        disabled={isUrlDisabled}
+                        className="bg-foreground/5 border-foreground/10 rounded-none h-12 focus:border-accent transition-colors pl-10 disabled:cursor-not-allowed"
+                        placeholder={isUrlDisabled ? "Disabled (Images active)" : "https://youtube.com/watch?v=..."}
                       />
                       <Youtube className="w-4 h-4 text-foreground/40 absolute left-4 top-1/2 -translate-y-1/2" />
                     </div>
+
                   </div>
 
                   <div className="space-y-3">
@@ -171,8 +208,11 @@ const JournalManager = () => {
                 <div className="space-y-3">
                   <Label className="text-[9px] font-black uppercase tracking-widest text-foreground/40">Project Gallery (Min 1)</Label>
                   <div 
-                    onClick={() => fileInputRef.current?.click()}
-                    className="group h-[320px] border border-dashed border-foreground/10 hover:border-accent/40 bg-foreground/[0.02] transition-all duration-700 flex flex-col items-center justify-center cursor-pointer relative overflow-hidden"
+                    onClick={() => !isImagesDisabled && fileInputRef.current?.click()}
+                    className={cn(
+                      "group h-[320px] border border-dashed border-foreground/10 transition-all duration-700 flex flex-col items-center justify-center relative overflow-hidden",
+                      isImagesDisabled ? "opacity-30 cursor-not-allowed bg-foreground/[0.01]" : "hover:border-accent/40 bg-foreground/[0.02] cursor-pointer"
+                    )}
                   >
                     <input 
                       type="file" 
@@ -181,7 +221,9 @@ const JournalManager = () => {
                       className="hidden" 
                       multiple 
                       accept="image/*" 
+                      disabled={isImagesDisabled}
                     />
+
                     
                     {selectedImages.length === 0 ? (
                       <div className="text-center space-y-4">

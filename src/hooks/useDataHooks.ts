@@ -86,10 +86,25 @@ export const useMessageMutations = () => {
   return { addMessage, deleteMessage };
 };
 
-// ─── Journal (Projects) ───────────────────────────────────────────────────────
+// ─── Journal (Merged Projects + Blogs) ───────────────────────────────────────
 export const useJournal = () => useQuery({
   queryKey: QUERY_KEYS.blogs,
-  queryFn: () => ProjectService.getAll(),
+  queryFn: async () => {
+    const [projects, blogs] = await Promise.all([
+      ProjectService.getAll(),
+      BlogService.getAllBlogs()
+    ]);
+    
+    // Merge datasets
+    const merged = [...projects, ...blogs];
+    
+    // Sort by date (instant) descending
+    return merged.sort((a, b) => {
+      const dateA = a.instant ? new Date(a.instant).getTime() : 0;
+      const dateB = b.instant ? new Date(b.instant).getTime() : 0;
+      return dateB - dateA;
+    });
+  },
   staleTime: 5 * 60 * 1000,
 });
 
@@ -97,15 +112,28 @@ export const useJournalMutations = () => {
   const qc = useQueryClient();
   const invalidate = () => qc.invalidateQueries({ queryKey: QUERY_KEYS.blogs });
 
-  const addJournal = useMutation({ 
+  // Route A: Architectural Showcase (Images)
+  const addProject = useMutation({ 
     mutationFn: (data: Parameters<typeof ProjectService.upload>[0]) => ProjectService.upload(data), 
     onSuccess: invalidate 
   });
   
+  // Route B: Video Narratives (YouTube)
+  const addBlog = useMutation({
+    mutationFn: (blog: Omit<JournalEntry, 'id' | 'instant'>) => BlogService.createBlog(blog),
+    onSuccess: invalidate
+  });
+  
   const deleteJournal = useMutation({ 
-    mutationFn: (id: string | number) => ProjectService.delete(id), 
+    mutationFn: (id: string | number) => {
+      // In a real scenario, we might need to know if it's a blog or project to hit the right DELETE route.
+      // For now, we attempt both or rely on the primary service if they share an ID space.
+      // Based on current BlogService, we attempt that first if it's a simple ID.
+      return ProjectService.delete(id).catch(() => BlogService.deleteBlog(id));
+    }, 
     onSuccess: invalidate 
   });
 
-  return { addJournal, deleteJournal };
+  return { addProject, addBlog, deleteJournal };
 };
+
