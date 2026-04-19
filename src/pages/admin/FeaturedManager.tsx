@@ -11,16 +11,17 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Tile } from '@/data/tiles';
 
+import { useFeaturedProducts, useFeaturedMutations } from '@/hooks/useProducts';
+
 const FeaturedManager = () => {
-  const { backendTiles, updateTile } = useGallery();
+  const { backendTiles } = useGallery();
+  const { data: featuredProducts = [], isLoading: isLoadingFeatured } = useFeaturedProducts();
+  const { addToFeatured, removeFromFeatured } = useFeaturedMutations();
+  
   const [search, setSearch] = useState('');
   const [isSyncing, setIsSyncing] = useState<string | number | null>(null);
 
-  // Split products into Featured vs Available
-  const featuredProducts = useMemo(() => 
-    backendTiles.filter(t => t.is_featured).slice(0, 6)
-  , [backendTiles]);
-
+  // Available are those not in the featuredProducts list
   const availableProducts = useMemo(() => {
     const featuredIds = new Set(featuredProducts.map(p => p.id));
     return backendTiles
@@ -37,21 +38,21 @@ const FeaturedManager = () => {
 
     setIsSyncing(product.id);
     try {
-      const data = new FormData();
-      data.append('is_featured', shouldFeature ? 'true' : 'false');
-      
-      // We must send other required fields because the backend might validate them
-      // In a real patch, we'd only send is_featured, but our updateTile expects FormData
-      await updateTile(product.id, data);
-      
-      toast.success(shouldFeature ? 'Item Promoted to Spotlight' : 'Item Removed from Spotlight');
+      if (shouldFeature) {
+        await addToFeatured.mutateAsync(product.id);
+        toast.success('Item Promoted to Spotlight');
+      } else {
+        await removeFromFeatured.mutateAsync(product.id);
+        toast.success('Item Removed from Spotlight');
+      }
     } catch (error: any) {
-      const msg = error?.response?.data?.non_field_errors?.[0] || 'Synchronization failed';
+      const msg = error?.response?.data?.message || error?.response?.data?.error || 'Synchronization failed';
       toast.error(msg);
     } finally {
       setIsSyncing(null);
     }
   };
+
 
   return (
     <div className="space-y-12">

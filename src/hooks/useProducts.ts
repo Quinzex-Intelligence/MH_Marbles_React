@@ -75,7 +75,7 @@ export const useInfiniteProducts = () => {
   });
 };
 
-// ─── Featured Products Hook ───────────────────────────────────────────────────
+// ─── Featured Products Hooks ──────────────────────────────────────────────────
 export const useFeaturedProducts = () => {
   const { data: brands = [] } = useBrands();
   const { data: categories = [] } = useCategories();
@@ -90,7 +90,27 @@ export const useFeaturedProducts = () => {
   });
 };
 
+export const useFeaturedMutations = () => {
+  const qc = useQueryClient();
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: [...QUERY_KEYS.products, 'featured'] });
+  };
+
+  const addToFeatured = useMutation({
+    mutationFn: (productId: string | number) => ProductService.addToFeatured(productId),
+    onSuccess: invalidate,
+  });
+
+  const removeFromFeatured = useMutation({
+    mutationFn: (productId: string | number) => ProductService.removeFromFeatured(productId),
+    onSuccess: invalidate,
+  });
+
+  return { addToFeatured, removeFromFeatured };
+};
+
 // ─── Product Mutations ────────────────────────────────────────────────────────
+
 export const useProductMutations = () => {
   const qc = useQueryClient();
 

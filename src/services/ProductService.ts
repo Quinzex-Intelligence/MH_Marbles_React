@@ -88,11 +88,36 @@ export const ProductService = {
     await api.delete(`/products/${id}/`);
   },
 
+  /**
+   * Fetch featured products from the dedicated Django route.
+   * This endpoint returns the curated subset for the homepage 'Curtain Reveal'.
+   */
   getFeatured: async (): Promise<Tile[]> => {
-    const res = await api.get('/products/featured/');
-    return (res.data || []).map(resolveProduct);
+    console.log("[API] Syncing featured spotlight from Django...");
+    const res = await api.get('/products/featured');
+    // Backend may return a list of product objects directly or nested
+    const products = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+    return products.map(resolveProduct);
   },
+
+  /**
+   * Promote a product to the spotlight.
+   */
+  addToFeatured: async (productId: string | number) => {
+    const res = await api.post('/products/featured/', { product: productId });
+    return res.data;
+  },
+
+  /**
+   * Remove a product from the spotlight.
+   */
+  removeFromFeatured: async (productId: string | number) => {
+    // Toggling the is_featured flag directly on the product detail endpoint
+    await api.patch(`/products/${productId}/`, { is_featured: false });
+  },
+
 };
+
 
 export default ProductService;
 
