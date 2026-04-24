@@ -15,7 +15,7 @@ const navLinks = [
   { href: '/journal', label: 'Recent Works' },
   { href: '/contact', label: 'Contact Us' },
   { href: '/heritage', label: 'About Us' },
-  { href: '/showroom', label: 'Where To Buy' },
+  // { href: '/showroom', label: 'Where To Buy' },
 ];
 
 export function Header() {
