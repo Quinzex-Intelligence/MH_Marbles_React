@@ -1,4 +1,4 @@
-##Deploy Pipeline - Final Version - No Changes needed after this##
+##Deploy Pipeline - Final Version - No Changes needed after this###
 name: Build and Deploy Frontend (Debug)
 
 on:
