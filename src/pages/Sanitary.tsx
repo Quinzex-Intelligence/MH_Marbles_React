@@ -43,7 +43,7 @@ const SanitaryCard = ({ item, brands }: { item: SanitaryItem, brands: any[] }) =
                         animate={{ opacity: 1, scale: 1.1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.6, ease: "easeInOut" }}
-                        className="absolute inset-0 w-full h-full object-cover grayscale active:grayscale-0 group-hover:grayscale-0"
+                        className="absolute inset-0 w-full h-full object-cover"
                     />
                 </AnimatePresence>
                 

@@ -59,10 +59,12 @@ export interface ContactInquiry {
 
 export interface HeroSlide {
   id: number;
-  // Backend returns image_urls[] (array of presigned S3 URLs)
   image_urls?: string[];
+  mobile_image_urls?: string[];
   // Convenience: first url, resolved in service layer
   image?: string;
+  mobile_image?: string;
+  display_on?: 'desktop' | 'mobile' | 'both';
   heading: string;
   subtext: string;
   cta_text: string;

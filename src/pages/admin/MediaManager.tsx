@@ -52,7 +52,7 @@ const SlideCard = ({ item, idx, onEdit, onDelete }: {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: idx * 0.05 }}
-      className="group relative bg-[#0C0A08] border border-foreground/5 overflow-hidden transition-all duration-700 hover:border-accent/40 shadow-2xl"
+      className="group relative bg-card border border-foreground/5 overflow-hidden transition-all duration-700 hover:border-accent/40 shadow-2xl"
     >
       <div className="aspect-[4/3] bg-foreground/5 relative flex items-center justify-center overflow-hidden">
          {item.image ? (
@@ -126,6 +126,7 @@ const MediaManager = () => {
   const [selectedMedia, setSelectedMedia] = useState<MediaEntry | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [mobileImageFile, setMobileImageFile] = useState<File | null>(null);
   
   const [formData, setFormData] = useState({
     heading: '',
@@ -133,7 +134,8 @@ const MediaManager = () => {
     cta_text: '',
     cta_link: '',
     order: 1,
-    is_active: true
+    is_active: true,
+    display_on: 'both' as 'desktop' | 'mobile' | 'both'
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -150,8 +152,12 @@ const MediaManager = () => {
     data.append('cta_link', formData.cta_link);
     data.append('order', formData.order.toString());
     data.append('is_active', formData.is_active ? 'true' : 'false');
+    data.append('display_on', formData.display_on);
     if (imageFile) {
       data.append('image', imageFile);
+    }
+    if (mobileImageFile) {
+      data.append('mobile_image', mobileImageFile);
     }
 
     try {
@@ -177,7 +183,8 @@ const MediaManager = () => {
       cta_text: item.cta_text,
       cta_link: item.cta_link,
       order: item.order,
-      is_active: item.is_active ?? true
+      is_active: item.is_active ?? true,
+      display_on: (item as any).display_on || 'both'
     });
     setIsDialogOpen(true);
   };
@@ -185,7 +192,8 @@ const MediaManager = () => {
   const resetForm = () => {
     setSelectedMedia(null);
     setImageFile(null);
-    setFormData({ heading: '', subtext: '', cta_text: '', cta_link: '', order: 1, is_active: true });
+    setMobileImageFile(null);
+    setFormData({ heading: '', subtext: '', cta_text: '', cta_link: '', order: 1, is_active: true, display_on: 'both' });
   };
 
   return (
@@ -245,22 +253,42 @@ const MediaManager = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-foreground/40">Cinematic Image</Label>
-                <div className="flex gap-4">
-                  <Input 
-                    type="file"
-                    accept="image/*"
-                    onChange={e => setImageFile(e.target.files?.[0] || null)}
-                    className="bg-foreground/5 border-foreground/10 rounded-none h-12 focus:border-accent transition-colors pt-2"
-                  />
-                  <div className="w-12 h-12 bg-foreground/5 border border-foreground/10 flex items-center justify-center shrink-0">
-                    <ImageIcon className="w-4 h-4 text-foreground/20" />
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <Label className="text-[9px] font-black uppercase tracking-widest text-foreground/40">Desktop Image</Label>
+                  <div className="flex gap-4">
+                    <Input 
+                      type="file"
+                      accept="image/*"
+                      onChange={e => setImageFile(e.target.files?.[0] || null)}
+                      className="bg-foreground/5 border-foreground/10 rounded-none h-12 focus:border-accent transition-colors pt-2"
+                    />
+                    <div className="w-12 h-12 bg-foreground/5 border border-foreground/10 flex items-center justify-center shrink-0">
+                      <ImageIcon className="w-4 h-4 text-foreground/20" />
+                    </div>
                   </div>
+                  {selectedMedia?.image && !imageFile && (
+                    <p className="text-[8px] text-foreground/20 italic truncate">Current: {selectedMedia.image.split('?')[0].split('/').pop()}</p>
+                  )}
                 </div>
-                {selectedMedia?.image && !imageFile && (
-                  <p className="text-[8px] text-foreground/20 italic">Current: {selectedMedia.image.split('/').pop()}</p>
-                )}
+
+                <div className="space-y-3">
+                  <Label className="text-[9px] font-black uppercase tracking-widest text-foreground/40">Mobile Image</Label>
+                  <div className="flex gap-4">
+                    <Input 
+                      type="file"
+                      accept="image/*"
+                      onChange={e => setMobileImageFile(e.target.files?.[0] || null)}
+                      className="bg-foreground/5 border-foreground/10 rounded-none h-12 focus:border-accent transition-colors pt-2"
+                    />
+                    <div className="w-12 h-12 bg-foreground/5 border border-foreground/10 flex items-center justify-center shrink-0">
+                      <ImageIcon className="w-4 h-4 text-foreground/20" />
+                    </div>
+                  </div>
+                  {(selectedMedia as any)?.mobile_image && !mobileImageFile && (
+                    <p className="text-[8px] text-foreground/20 italic truncate">Current: {(selectedMedia as any).mobile_image.split('?')[0].split('/').pop()}</p>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-3">
@@ -294,17 +322,32 @@ const MediaManager = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 py-4 border-y border-foreground/5">
-                <input 
-                  type="checkbox"
-                  id="is_active_toggle"
-                  checked={formData.is_active}
-                  onChange={e => setFormData({...formData, is_active: e.target.checked})}
-                  className="w-4 h-4 accent-accent cursor-pointer"
-                />
-                <div>
-                  <Label htmlFor="is_active_toggle" className="text-[10px] font-black uppercase tracking-widest text-foreground cursor-pointer">Active in Carousel</Label>
-                  <p className="text-[8px] text-foreground/30 mt-0.5">Visible to public visitors when enabled</p>
+              <div className="grid grid-cols-2 gap-6 items-center py-4 border-y border-foreground/5">
+                <div className="flex items-center gap-4">
+                  <input 
+                    type="checkbox"
+                    id="is_active_toggle"
+                    checked={formData.is_active}
+                    onChange={e => setFormData({...formData, is_active: e.target.checked})}
+                    className="w-4 h-4 accent-accent cursor-pointer"
+                  />
+                  <div>
+                    <Label htmlFor="is_active_toggle" className="text-[10px] font-black uppercase tracking-widest text-foreground cursor-pointer">Active in Carousel</Label>
+                    <p className="text-[8px] text-foreground/30 mt-0.5">Visible to public visitors when enabled</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-[9px] font-black uppercase tracking-widest text-foreground">Display Target</Label>
+                  <select 
+                    value={formData.display_on}
+                    onChange={e => setFormData({...formData, display_on: e.target.value as any})}
+                    className="w-full bg-foreground/5 border border-foreground/10 rounded-none h-10 px-3 text-[10px] uppercase font-bold tracking-widest text-foreground/80 focus:border-accent outline-none"
+                  >
+                    <option value="both">Desktop & Mobile</option>
+                    <option value="desktop">Desktop Only</option>
+                    <option value="mobile">Mobile Only</option>
+                  </select>
                 </div>
               </div>
 

@@ -4,7 +4,7 @@ import { JournalEntry } from '@/types/gallery';
 export const BlogService = {
   getAllBlogs: async (): Promise<JournalEntry[]> => {
     try {
-      const prefix = import.meta.env.VITE_SPRING_BLOG_PREFIX || '/api/blogs';
+      const prefix = import.meta.env.VITE_SPRING_BLOG_PREFIX || '/api/spring/blogs';
       const response = await springApi.get(`${prefix}/all`);
       return response.data || [];
     } catch (error) {
@@ -15,7 +15,7 @@ export const BlogService = {
   
   createBlog: async (blog: Omit<JournalEntry, 'id' | 'instant'>) => {
     try {
-      const prefix = import.meta.env.VITE_SPRING_BLOG_PREFIX || '/api/blogs';
+      const prefix = import.meta.env.VITE_SPRING_BLOG_PREFIX || '/api/spring/blogs';
       const payload = {
         bulkRequest: [
           {
@@ -37,7 +37,7 @@ export const BlogService = {
 
   deleteBlog: async (id: number | string) => {
     try {
-      const prefix = import.meta.env.VITE_SPRING_BLOG_PREFIX || '/api/blogs';
+      const prefix = import.meta.env.VITE_SPRING_BLOG_PREFIX || '/api/spring/blogs';
       const response = await springApi.delete(`${prefix}/delete`, {
         data: [id]
       });

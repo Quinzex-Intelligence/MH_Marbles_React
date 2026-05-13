@@ -52,12 +52,16 @@ const RelatedCard = ({ tile }: { tile: { id: string | number; name: string; imag
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { backendTiles } = useGallery();
+  const { backendTiles, brands, categories } = useGallery();
 
   const heroRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  // Reset active image when product changes
+  useEffect(() => { setActiveImageIndex(0); }, [id]);
 
   const tile = useMemo(
     () => backendTiles.find((t) => String(t.id) === String(id)),
@@ -74,6 +78,18 @@ const ProductDetail: React.FC = () => {
       )
       .slice(0, 4);
   }, [backendTiles, tile]);
+
+  const brandName = useMemo(() => {
+    if (!tile) return null;
+    const b = brands.find((x) => String(x.id) === String(tile.company));
+    return b ? b.name : (tile.brand || String(tile.company || 'Unknown'));
+  }, [brands, tile]);
+
+  const categoryName = useMemo(() => {
+    if (!tile) return null;
+    const c = categories.find((x) => String(x.id) === String(tile.category));
+    return c ? c.name : (tile.category_name || String(tile.category || 'Unknown'));
+  }, [categories, tile]);
 
   // Parallax on the hero image
   useEffect(() => {
@@ -133,6 +149,12 @@ const ProductDetail: React.FC = () => {
   }
 
   const imageUrl = tile.image_url || tile.image;
+  const allImages: string[] = (
+    tile.image_urls && tile.image_urls.length > 0
+      ? tile.image_urls
+      : imageUrl ? [imageUrl] : []
+  );
+  const activeImage = allImages[activeImageIndex] || imageUrl;
 
   return (
     <>
@@ -159,13 +181,13 @@ const ProductDetail: React.FC = () => {
 
         {/* ── Hero ── */}
         <div ref={heroRef} className="relative h-[85vh] md:h-screen w-full overflow-hidden">
-          {imageUrl ? (
+          {activeImage ? (
             <img
               ref={imageRef}
-              src={getOptimizedImageUrl(imageUrl, 1920, 2400)}
+              src={getOptimizedImageUrl(activeImage, 1920, 2400)}
               alt={tile.name}
               onLoad={() => setImageLoaded(true)}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 scale-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-contain md:object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
             />
           ) : (
             <div className="absolute inset-0 w-full h-full" style={{ backgroundColor: tile.fill || '#1a1a18' }} />
@@ -185,7 +207,7 @@ const ProductDetail: React.FC = () => {
             </Link>
             <span className="text-foreground/20 text-[8px]">/</span>
             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-foreground/60">
-              {tile.category_name || String(tile.category || 'Stone')}
+              {categoryName}
             </span>
           </div>
 
@@ -196,7 +218,7 @@ const ProductDetail: React.FC = () => {
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-8 h-[1px] bg-[#C8A96E]" />
                   <span className="text-[9px] font-black uppercase tracking-[0.4em] text-[#C8A96E]">
-                    {tile.category_name || String(tile.category || 'Signature Stone')}
+                    {categoryName}
                   </span>
                 </div>
                 <h1 className="text-[12vw] md:text-[8vw] font-serif font-light tracking-tighter leading-[0.85] text-foreground">
@@ -237,29 +259,69 @@ const ProductDetail: React.FC = () => {
               <p className="text-[9px] font-black uppercase tracking-[0.4em] text-foreground/30 mb-2">
                 Technical Specifications
               </p>
-              <SpecRow label="Category" value={tile.category_name || String(tile.category || null)} />
+              <SpecRow label="Category" value={categoryName} />
               <SpecRow label="Finish" value={tile.finish} />
               <SpecRow label="Dimensions" value={tile.size} />
               <SpecRow label="Thickness" value={tile.thickness ? `${tile.thickness} mm` : null} />
               <SpecRow label="Origin" value={tile.origin} />
-              <SpecRow label="Brand / Company" value={tile.brand} />
-              <SpecRow label="Colour Profile" value={tile.color} />
+              <SpecRow label="Brand / Company" value={brandName} />
+              {/* <SpecRow label="Colour Profile" value={tile.color} /> */}
               <SpecRow label="Applications" value={Array.isArray(tile.usage) ? tile.usage.join(', ') : tile.usage} />
             </div>
           </div>
 
           {/* Right: Image Detail + CTA */}
           <div className="flex flex-col gap-8">
-            {/* Secondary product image */}
-            {imageUrl && (
-              <div className="aspect-[4/5] overflow-hidden relative">
-                <img
-                  src={getOptimizedImageUrl(imageUrl, 900, 1125)}
-                  alt={`${tile.name} detail`}
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 border border-foreground/[0.04]" />
+            {/* Image Gallery */}
+            {allImages.length > 0 && (
+              <div className="flex flex-col gap-3">
+                {/* Main Active Image */}
+                <div className="aspect-[4/5] overflow-hidden relative bg-foreground/[0.03]">
+                  <img
+                    key={activeImage}
+                    src={getOptimizedImageUrl(activeImage || '', 900, 1125)}
+                    alt={`${tile.name} detail`}
+                    loading="lazy"
+                    className="w-full h-full object-contain md:object-cover transition-opacity duration-500"
+                  />
+                  <div className="absolute inset-0 border border-foreground/[0.04]" />
+                  {allImages.length > 1 && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+                      {allImages.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setActiveImageIndex(idx)}
+                          className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                            idx === activeImageIndex ? 'bg-[#C8A96E] scale-125' : 'bg-white/30'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Thumbnail Strip */}
+                {allImages.length > 1 && (
+                  <div className="grid grid-cols-5 gap-2">
+                    {allImages.map((url, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveImageIndex(idx)}
+                        className={`aspect-square overflow-hidden relative transition-all duration-300 ${
+                          idx === activeImageIndex
+                            ? 'ring-1 ring-[#C8A96E] opacity-100'
+                            : 'opacity-40 hover:opacity-80'
+                        }`}
+                      >
+                        <img
+                          src={getOptimizedImageUrl(url, 200, 200)}
+                          alt={`${tile.name} ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

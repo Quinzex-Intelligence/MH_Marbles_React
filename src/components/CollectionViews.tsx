@@ -135,16 +135,21 @@ export const GalleryCard = React.memo(({ tile, i }: { tile: Tile, i: number }) =
   }, [tile.image_urls, tile.image_url, tile.image]);
 
   useEffect(() => {
-    let interval: any;
-    if (isHovered && images.length > 1) {
-      interval = setInterval(() => {
+    if (images.length <= 1) return;
+    // Stagger start: each card waits a different offset so they don't all flip at once
+    const offset = (i % 6) * 700;
+    const timeoutId = setTimeout(() => {
+      const intervalId = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % images.length);
-      }, 1500);
-    } else if (!isHovered) {
-      setCurrentIndex(0);
-    }
-    return () => clearInterval(interval);
-  }, [isHovered, images.length]);
+      }, 2500);
+      // store on element for cleanup
+      (timeoutId as any)._interval = intervalId;
+    }, offset);
+    return () => {
+      clearTimeout(timeoutId);
+      if ((timeoutId as any)._interval) clearInterval((timeoutId as any)._interval);
+    };
+  }, [images.length, i]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -165,14 +170,22 @@ export const GalleryCard = React.memo(({ tile, i }: { tile: Tile, i: number }) =
       >
         {images[0] ? (
           <>
-            <img
-              src={getOptimizedImageUrl(images[currentIndex], 900, 600)}
-              alt={tile.name}
-              loading={i < 6 ? "eager" : "lazy"}
-              fetchPriority={i < 6 ? "high" : "low"}
-              decoding="async"
-              className={`w-full h-full object-cover transition-all duration-700 ${isHovered ? 'scale-105 blur-[2px] brightness-50' : 'scale-100 blur-0 brightness-100'}`}
-            />
+            {/* Crossfade image stack — all images rendered, opacity transitions between them */}
+            {images.map((src, idx) => (
+              <img
+                key={src}
+                src={getOptimizedImageUrl(src, 900, 600)}
+                alt={tile.name}
+                loading={i < 6 && idx === 0 ? "eager" : "lazy"}
+                fetchPriority={i < 6 && idx === 0 ? "high" : "low"}
+                decoding="async"
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
+                  idx === currentIndex
+                    ? 'opacity-100 scale-100'
+                    : 'opacity-0 scale-[1.02]'
+                } ${isHovered ? 'blur-[2px] brightness-50' : 'blur-0 brightness-100'}`}
+              />
+            ))}
             {/* Magnifying Lens */}
             <div
               className="absolute pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 border-2 border-accent/50 rounded-full shadow-[0_0_50px_rgba(200,169,110,0.3)] z-10"

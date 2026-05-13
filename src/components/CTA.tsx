@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const FEATURES = [
   { label: 'Private Curation', sub: 'Hand-picked from global quarries' },
-  { label: 'Flagship Gallery', sub: '500+ Tile in Kukatpally' },
+  { label: 'Flagship Gallery', sub: '1000+ Tiles in MH Marble, Gandimaisamma' },
   { label: 'Bespoke Projects', sub: 'Tailored architectural solutions' },
 ];
 

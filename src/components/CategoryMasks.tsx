@@ -13,8 +13,7 @@ const getCategoryImage = (categoryId: string): string => {
     const assets: Record<string, string> = {
         marble: '/assets/CategoryMasks/Tiles.png',
         granite: '/assets/CategoryMasks/Granite.png',
-        vitrified: '/assets/CategoryMasks/VertifiedTiles.png',
-        wooden: '/assets/CategoryMasks/WoodenFinish.png'
+        sanitary: '/assets/CategoryMasks/Sanitary.png',
     };
     
     if (assets[categoryId]) return assets[categoryId];
@@ -142,7 +141,7 @@ export function CategoryMasks() {
                     alt={category.name} 
                     loading="lazy"
                     decoding="async"
-                    className="absolute inset-0 z-0 w-full h-full object-cover filter contrast-[1.1] saturate-[1.2] will-change-transform" 
+                    className="absolute inset-0 z-0 w-full h-full object-contain md:object-cover filter contrast-[1.1] saturate-[1.2] will-change-transform" 
                 />
 
                 {/* The Typographic Mask (Theme-aware Blend) */}

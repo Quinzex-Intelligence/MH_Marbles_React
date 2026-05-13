@@ -324,7 +324,7 @@ const JournalManager = () => {
                       <span className="text-[7px] font-black uppercase tracking-[0.7em] text-foreground/12 flex items-center gap-1.5">
                         <Calendar className="w-2 h-2" />
                         {entry.instant
-                          ? new Date(entry.instant).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                          ? new Date(typeof entry.instant === 'number' && entry.instant < 20000000000 ? entry.instant * 1000 : entry.instant).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
                           : 'Unknown Date'}
                       </span>
                       <span className="w-12 h-px bg-foreground/[0.06]" />

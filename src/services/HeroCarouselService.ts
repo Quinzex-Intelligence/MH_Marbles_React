@@ -8,6 +8,7 @@ import { HeroSlide } from '@/types/gallery';
 const resolveSlide = (s: HeroSlide): HeroSlide => ({
   ...s,
   image: s.image_urls?.[0] ?? s.image ?? '',
+  mobile_image: s.mobile_image_urls?.[0] ?? s.mobile_image ?? s.image_urls?.[0] ?? s.image ?? '',
 });
 
 export const HeroCarouselService = {
@@ -29,6 +30,11 @@ export const HeroCarouselService = {
       data.delete('image');
       data.append('image_1', file);
     }
+    const mobileFile = data.get('mobile_image') as File | null;
+    if (mobileFile) {
+      data.delete('mobile_image');
+      data.append('mobile_image_1', mobileFile);
+    }
     const response = await api.post('/hero_carousel/', data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
@@ -41,6 +47,11 @@ export const HeroCarouselService = {
     if (file) {
       data.delete('image');
       data.append('image_1', file);
+    }
+    const mobileFile = data.get('mobile_image') as File | null;
+    if (mobileFile) {
+      data.delete('mobile_image');
+      data.append('mobile_image_1', mobileFile);
     }
     const response = await api.patch(`/hero_carousel/${id}/`, data, {
       headers: { 'Content-Type': 'multipart/form-data' },

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback } from 'react';
+import React, { createContext, useContext, useCallback, useMemo } from 'react';
 import { api } from '@/lib/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { Tile, SanitaryItem, initialTiles } from '@/data/tiles';
@@ -117,11 +117,39 @@ export const GalleryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }));
   }, [nextPageUrl, brandsData, categoriesData, qc, productsData]);
 
+  const mappedBackendTiles = useMemo(() => {
+    if (!productsData?.backendTiles) return [];
+    if (!brandsData.length && !categoriesData.length) return productsData.backendTiles;
+
+    const brandMap = new Map(brandsData.map(b => [String(b.id), b.name]));
+    const catMap = new Map(categoriesData.map(c => [String(c.id), c.name]));
+    
+    return productsData.backendTiles.map(product => ({
+      ...product,
+      brand: brandMap.get(String(product.company)) || String(product.company || product.brand || 'Unknown'),
+      category_name: catMap.get(String(product.category)) || product.category_name || 'Unknown',
+    }));
+  }, [productsData?.backendTiles, brandsData, categoriesData]);
+
+  const mappedTiles = useMemo(() => {
+    if (!productsData?.tiles) return initialTiles;
+    if (!brandsData.length && !categoriesData.length) return productsData.tiles;
+
+    const brandMap = new Map(brandsData.map(b => [String(b.id), b.name]));
+    const catMap = new Map(categoriesData.map(c => [String(c.id), c.name]));
+    
+    return productsData.tiles.map(product => ({
+      ...product,
+      brand: brandMap.get(String(product.company)) || String(product.company || product.brand || 'Unknown'),
+      category_name: catMap.get(String(product.category)) || product.category_name || 'Unknown',
+    }));
+  }, [productsData?.tiles, brandsData, categoriesData]);
+
   // ─── Context value — identical surface API as before ───────────────────────
   const value: GalleryContextType = {
     // Products
-    tiles: productsData?.tiles ?? initialTiles,
-    backendTiles: productsData?.backendTiles ?? [],
+    tiles: mappedTiles,
+    backendTiles: mappedBackendTiles,
     addTile: async (data) => { await addProduct.mutateAsync(data); },
     updateTile: async (id, data) => { await updateProduct.mutateAsync({ id, data }); },
     deleteTile: async (id) => { await deleteProduct.mutateAsync(id); },

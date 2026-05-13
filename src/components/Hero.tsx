@@ -7,6 +7,8 @@ type SlideData = {
   label: string;
   over: string;
   image: string;
+  mobile_image: string;
+  display_on?: string;
   cta_text: string;
   cta_link: string;
 };
@@ -34,6 +36,8 @@ export function Hero() {
         label: slide.heading || '',
         over: slide.subtext || '',
         image: slide.image || '',
+        mobile_image: slide.mobile_image || slide.image || '',
+        display_on: slide.display_on || 'both',
         cta_text: slide.cta_text || '',
         cta_link: slide.cta_link || '',
       }));
@@ -132,11 +136,20 @@ export function Hero() {
             style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 1 : 0 }}
           >
             {slide.image && (
-              <img
-                src={slide.image}
-                alt={slide.label}
-                className="w-full h-full object-cover"
-              />
+              <>
+                {/* Desktop Image */}
+                <img
+                  src={slide.image}
+                  alt={slide.label}
+                  className="w-full h-full object-contain md:object-cover hidden md:block"
+                />
+                {/* Mobile Image */}
+                <img
+                  src={slide.mobile_image}
+                  alt={slide.label}
+                  className="w-full h-full object-cover block md:hidden"
+                />
+              </>
             )}
             {/* Vignettes for text legibility */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#0C0A08]/90 via-transparent to-transparent" />

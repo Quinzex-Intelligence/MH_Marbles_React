@@ -110,8 +110,8 @@ const Index = () => {
   return (
     <>
       <SEO
-        title="Architectural Stone Gallery & Signature Stone Curation"
-        description="Curators of the earth's most exquisite architectural statements. Discover our signature collection of Italian marble and exotic stones."
+        title="MH MARBLE | Gandimaisamma, Hyderabad"
+        description="MH MARBLE, Gandimaisamma, Hyderabad has been a trusted name in the tile industry since 2005. We offer a wide range of high-quality tiles for residential and commercial projects. Our collection includes vitrified tiles, porcelain tiles, ceramic tiles, and more. We are committed to providing our customers with the best possible products and services."
         breadcrumbs={[{ name: 'Home', item: '/' }]}
       />
 

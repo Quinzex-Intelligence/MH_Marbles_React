@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import { useGallery } from '@/contexts/GalleryContext';
 import { ChevronDown } from 'lucide-react';
@@ -26,6 +26,8 @@ export function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { categories, brands } = useGallery();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     setMounted(true);
@@ -44,9 +46,7 @@ export function Header() {
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-700",
-          isScrolled
-            ? "glass-sepia border-b border-border py-3 shadow-luxury"
-            : "bg-transparent py-6"
+          "glass-sepia border-b border-border py-3 shadow-luxury"
         )}
       >
         <div className="w-full max-w-none px-4 md:px-[3%]">
@@ -62,7 +62,7 @@ export function Header() {
               <div className="flex flex-col">
                 <span className={cn(
                   "text-base md:text-[18px] font-serif font-bold tracking-[0.15em] uppercase leading-tight transition-colors duration-700 group-hover:text-accent",
-                  isScrolled ? "text-foreground" : "text-foreground"
+                  isScrolled || isHomePage ? "text-foreground" : "text-foreground"
                 )}>
                   MH MARBLE
                 </span>
@@ -85,7 +85,7 @@ export function Header() {
                     to={link.href}
                     className={cn(
                       "text-[12px] xl:text-[13px] font-sans font-black uppercase tracking-[0.25em] xl:tracking-[0.3em] transition-all duration-500 relative flex items-center gap-1.5 whitespace-nowrap",
-                      isScrolled ? "text-foreground/80 hover:text-foreground" : "text-foreground/70 hover:text-foreground"
+                      isScrolled || isHomePage ? "text-foreground/80 hover:text-foreground" : "text-foreground/70 hover:text-foreground"
                     )}
                   >
                     {link.label}
