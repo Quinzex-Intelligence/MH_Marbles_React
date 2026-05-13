@@ -6,7 +6,7 @@ import { useGallery } from '@/contexts/GalleryContext';
 import { cn } from '@/lib/utils';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Calendar, Image as ImageIcon } from 'lucide-react';
+import { Calendar, Image as ImageIcon, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
@@ -101,12 +101,205 @@ const ImageMagnifier = ({ src, alt, className }: { src: string; alt: string; cla
     );
 };
 
+// ─── YouTube Helpers ────────────────────────────────────────────────────────
+const getYouTubeId = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/|live\/)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
 
+const getYouTubeEmbedUrl = (url: string) => {
+    const videoId = getYouTubeId(url);
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+};
+
+const extractYoutubeUrl = (text: string) => {
+    if (!text) return null;
+    const ytRegex = /(https?:\/\/(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11}))/;
+    const match = text.match(ytRegex);
+    return match ? match[0] : null;
+};
+
+// ─── Component: YouTubePlayer ──────────────────────────────────────────────
+const YouTubePlayer = ({ videoId, entryId }: { videoId: string; entryId: string | number }) => {
+    const [player, setPlayer] = useState<any>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
+    const [progress, setProgress] = useState(0);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const playerRef = useRef<any>(null);
+
+    useEffect(() => {
+        let internalPlayer: any = null;
+        
+        const initPlayer = () => {
+            if (!(window as any).YT || !(window as any).YT.Player) return;
+            
+            internalPlayer = new (window as any).YT.Player(`player-${entryId}`, {
+                videoId: videoId,
+                playerVars: {
+                    autoplay: 0,
+                    controls: 0,
+                    mute: 1,
+                    modestbranding: 1,
+                    rel: 0,
+                    iv_load_policy: 3,
+                    playsinline: 1,
+                    enablejsapi: 1
+                },
+                events: {
+                    onReady: (event: any) => {
+                        setPlayer(event.target);
+                        playerRef.current = event.target;
+                        event.target.mute();
+                    },
+                    onStateChange: (event: any) => {
+                        setIsPlaying(event.data === (window as any).YT.PlayerState.PLAYING);
+                    }
+                }
+            });
+        };
+
+        if (!(window as any).YT) {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+            (window as any).onYouTubeIframeAPIReady = initPlayer;
+        } else {
+            initPlayer();
+        }
+
+        return () => {
+            if (internalPlayer && internalPlayer.destroy) internalPlayer.destroy();
+        };
+    }, [videoId, entryId]);
+
+    // Intersection Observer for Autoplay
+    useEffect(() => {
+        if (!player) return;
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                player.playVideo();
+            } else {
+                player.pauseVideo();
+            }
+        }, { threshold: 0.5 });
+
+        if (containerRef.current) observer.observe(containerRef.current);
+        return () => observer.disconnect();
+    }, [player]);
+
+    // Progress Tracking
+    useEffect(() => {
+        let interval: any;
+        if (isPlaying && player) {
+            interval = setInterval(() => {
+                if (player.getCurrentTime && player.getDuration) {
+                    const current = player.getCurrentTime();
+                    const total = player.getDuration();
+                    if (total > 0) setProgress((current / total) * 100);
+                }
+            }, 500);
+        }
+        return () => clearInterval(interval);
+    }, [isPlaying, player]);
+
+    const togglePlay = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!player) return;
+        if (isPlaying) player.pauseVideo();
+        else player.playVideo();
+    };
+
+    const toggleMute = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!player) return;
+        if (isMuted) {
+            player.unMute();
+            setIsMuted(false);
+        } else {
+            player.mute();
+            setIsMuted(true);
+        }
+    };
+
+    return (
+        <div ref={containerRef} className="relative w-full h-full group bg-black overflow-hidden">
+            {/* Scaled Player to hide YouTube UI edges (Share, Logo, etc) */}
+            <div 
+                id={`player-${entryId}`} 
+                className="absolute inset-0 w-full h-full pointer-events-none scale-[1.35] origin-center" 
+            />
+            
+            {/* Interaction Shield - prevents clicking hidden YT elements */}
+            <div className="absolute inset-0 z-[5] cursor-default" onClick={togglePlay} />
+
+            {/* Custom Premium Controls Overlay */}
+            <div className="absolute inset-0 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none">
+                <div className="flex items-center gap-8 pointer-events-auto">
+                    <button 
+                        onClick={togglePlay} 
+                        className="text-white hover:text-[#C8A96E] transition-colors duration-300"
+                    >
+                        {isPlaying ? <Pause size={28} strokeWidth={1.5} /> : <Play size={28} strokeWidth={1.5} fill="currentColor" />}
+                    </button>
+                    
+                    <div 
+                        className="flex-1 h-[2px] bg-white/10 relative overflow-hidden rounded-full backdrop-blur-sm cursor-pointer group/progress"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (!player || !player.getDuration) return;
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const x = e.clientX - rect.left;
+                            const percentage = x / rect.width;
+                            const newTime = player.getDuration() * percentage;
+                            player.seekTo(newTime, true);
+                            setProgress(percentage * 100);
+                        }}
+                    >
+                        <motion.div 
+                            className="absolute top-0 left-0 h-full bg-[#C8A96E] group-hover/progress:h-full transition-all" 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progress}%` }}
+                            transition={{ type: "spring", stiffness: 50, damping: 20 }}
+                        />
+                        {/* Hover Glow Effect */}
+                        <div className="absolute top-0 left-0 h-full bg-white/20 opacity-0 group-hover/progress:opacity-100 transition-opacity" style={{ width: `${progress}%` }} />
+                    </div>
+                    
+                    <button 
+                        onClick={toggleMute} 
+                        className="text-white hover:text-[#C8A96E] transition-colors duration-300"
+                    >
+                        {isMuted ? <VolumeX size={24} strokeWidth={1.5} /> : <Volume2 size={24} strokeWidth={1.5} />}
+                    </button>
+                </div>
+                
+                {/* Visual Accent */}
+                <div className="mt-4 flex justify-between items-center opacity-40">
+                    <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white">Interactive Archive</span>
+                    <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white">MH Marble Tour</span>
+                </div>
+            </div>
+
+            {/* Hint Overlay when not hovered */}
+            <div className="absolute top-8 left-8 opacity-40 group-hover:opacity-0 transition-opacity duration-500 z-0">
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/60">Cinematic Broadcast</span>
+            </div>
+        </div>
+    );
+};
 
 // ─── Component: JournalEntryCard ──────────────────────────────────────────────
 const JournalEntryCard = ({ entry, index }: { entry: any; index: number }) => {
     const initialImage = entry.image_urls && entry.image_urls.length > 0 ? entry.image_urls[0] : '';
     const [activeImage, setActiveImage] = useState(initialImage);
+
+    // Robust Video Detection
+    const detectedYtUrl = entry.ytUrl || extractYoutubeUrl(entry.description);
+    const videoId = detectedYtUrl ? getYouTubeId(detectedYtUrl) : null;
 
     useEffect(() => {
         if (entry.image_urls?.length) {
@@ -121,13 +314,8 @@ const JournalEntryCard = ({ entry, index }: { entry: any; index: number }) => {
                 <div className="flex flex-col gap-1">
                     {/* Primary Media */}
                     <div className="aspect-video w-full relative">
-                        {entry.ytUrl ? (
-                            <iframe 
-                                src={entry.ytUrl.replace('watch?v=', 'embed/').split('&')[0]} 
-                                className="absolute inset-0 w-full h-full border-0 grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowFullScreen 
-                            />
+                        {videoId ? (
+                            <YouTubePlayer videoId={videoId} entryId={entry.id} />
                         ) : activeImage ? (
                             <ImageMagnifier 
                                 src={activeImage} 
